@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💪 PulsoFit
 
-## Getting Started
+Aplicación moderna para la gestión y seguimiento de rutinas de gimnasio, enfocada en mejorar la constancia, el rendimiento y el progreso del usuario.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Descripción
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**PulsoFit** es una app diseñada para ayudarte a entrenar de forma organizada y eficiente. Permite crear rutinas personalizadas, registrar entrenamientos en tiempo real y visualizar el progreso mediante métricas claras.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+El objetivo es convertir el entrenamiento en un proceso medible, motivador y sostenible.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ✨ Funcionalidades principales
 
-To learn more about Next.js, take a look at the following resources:
+- 🏋️ Creación de rutinas personalizadas
+- 📅 Organización de entrenamientos por días
+- 🧠 Registro de ejercicios, series, repeticiones y peso
+- ⏱️ Seguimiento de entrenamientos en tiempo real
+- 📊 Visualización de progreso y estadísticas
+- 📖 Historial de entrenamientos
+- 🔍 Catálogo de ejercicios
+- 👤 Perfil de usuario configurable
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧱 Arquitectura (propuesta)
 
-## Deploy on Vercel
+- Frontend: Next
+- Backend: Node.js
+- Base de datos: PostgreSQL
+- Autenticación: JWT
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📱 Pantallas principales
+
+- Login / Registro
+- Dashboard (resumen del usuario)
+- Rutinas
+- Detalle de rutina
+- Entrenamiento en curso
+- Historial
+- Progreso / Estadísticas
+- Ejercicios
+- Perfil
+- Configuración
+
+---
+
+## 🎯 Objetivo del proyecto
+
+Construir una aplicación completa de fitness que permita:
+
+- Mejorar la organización del entrenamiento
+- Registrar el progreso de forma precisa
+- Motivar al usuario mediante métricas y visualización
+- Escalar hacia funcionalidades más avanzadas (planes, coaching, etc.)
+
+---
+
+## 👨‍💻 Autor
+
+### Tomás Rivetta
+
+#### 🌐 Portfolio: https://totoridev.netlify.app/
+
+#### 💼 LinkedIn: https://www.linkedin.com/in/tomasrivetta-fullstack/
