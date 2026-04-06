@@ -1,4 +1,11 @@
+'use client'
+
+import { useActionState } from 'react'
+import { login } from '../actions'
+
 export default function LoginPage() {
+  const [state, formAction, pending] = useActionState(login, null)
+
   return (
     <>
       <main className="flex min-h-screen">
@@ -44,11 +51,16 @@ export default function LoginPage() {
             </header>
             
             {/* Login Form */}
-            <form className="space-y-6">
+            <form action={formAction} className="space-y-6">
+              {state?.error && (
+                <div className="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-xl text-sm font-medium">
+                  {state.error}
+                </div>
+              )}
               <div className="space-y-2">
                 <label className="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant px-1" htmlFor="email">Email</label>
                 <div className="relative group">
-                  <input className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" id="email" placeholder="athlete@kinetic.com" type="email" />
+                  <input name="email" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" id="email" placeholder="athlete@kinetic.com" type="email" />
                 </div>
               </div>
               <div className="space-y-2">
@@ -57,12 +69,12 @@ export default function LoginPage() {
                   <a className="text-xs font-medium text-primary hover:text-white transition-colors" href="#">¿Olvidaste tu contraseña?</a>
                 </div>
                 <div className="relative group">
-                  <input className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" id="password" placeholder="••••••••••••" type="password" />
+                  <input name="password" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" id="password" placeholder="••••••••••••" type="password" />
                 </div>
               </div>
-              <button className="kinetic-gradient w-full py-4 rounded-xl text-on-primary-fixed font-headline font-bold text-lg active:scale-95 transition-transform duration-200 flex items-center justify-center gap-2 mt-4" type="submit">
-                Acceder al Laboratorio
-                <span className="material-symbols-outlined text-xl">arrow_forward</span>
+              <button disabled={pending} className="kinetic-gradient w-full py-4 rounded-xl text-on-primary-fixed font-headline font-bold text-lg active:scale-95 transition-transform duration-200 flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:active:scale-100" type="submit">
+                {pending ? 'Autorizando...' : 'Acceder al Laboratorio'}
+                {!pending && <span className="material-symbols-outlined text-xl">arrow_forward</span>}
               </button>
             </form>
             

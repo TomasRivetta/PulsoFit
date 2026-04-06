@@ -44,3 +44,21 @@ body {
 .kinetic-gradient {
   background: linear-gradient(45deg, var(--color-primary-container), var(--color-primary-dim));
 }
+
+.glass-card {
+  background: rgba(38, 38, 38, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.text-shadow-glow {
+  text-shadow: 0 0 12px rgba(202, 253, 0, 0.4);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

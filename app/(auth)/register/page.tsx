@@ -1,4 +1,11 @@
+'use client'
+
+import { useActionState } from 'react'
+import { signup } from '../actions'
+
 export default function RegisterPage() {
+  const [state, formAction, pending] = useActionState(signup, null)
+
   return (
     <>
       {/* Decorative Kinetic Elements */}
@@ -52,22 +59,27 @@ export default function RegisterPage() {
               <p className="text-on-surface-variant font-body">Ingresa tus datos para comenzar tu viaje.</p>
             </header>
 
-            <form className="space-y-6">
+            <form action={formAction} className="space-y-6">
+              {state?.error && (
+                <div className="bg-error/10 border border-error/20 text-error px-4 py-3 rounded-xl text-sm font-medium">
+                  {state.error}
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold px-1">Nombre</label>
-                  <input className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="John" type="text" />
+                  <input name="nombre" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="John" type="text" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold px-1">Apellido</label>
-                  <input className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="Doe" type="text" />
+                  <input name="apellido" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="Doe" type="text" />
                 </div>
               </div>
               
               <div className="space-y-2">
                 <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold px-1">Email</label>
                 <div className="relative">
-                  <input className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="john@example.com" type="email" />
+                  <input name="email" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="john@example.com" type="email" />
                   <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">mail</span>
                 </div>
               </div>
@@ -75,7 +87,7 @@ export default function RegisterPage() {
               <div className="space-y-2">
                 <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold px-1">Contraseña</label>
                 <div className="relative">
-                  <input className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="••••••••" type="password" />
+                  <input name="password" required minLength={6} className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="••••••••" type="password" />
                   <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock</span>
                 </div>
               </div>
@@ -83,14 +95,14 @@ export default function RegisterPage() {
               <div className="space-y-2">
                 <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold px-1">Repetir contraseña</label>
                 <div className="relative">
-                  <input className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="••••••••" type="password" />
+                  <input name="confirm-password" required minLength={6} className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="••••••••" type="password" />
                   <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">verified_user</span>
                 </div>
               </div>
 
-              <button className="w-full kinetic-gradient py-4 rounded-xl text-on-primary-fixed font-headline font-bold text-lg active:scale-95 transition-transform duration-200 mt-4 flex items-center justify-center gap-2 group" type="submit">
-                Crear Cuenta
-                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              <button disabled={pending} className="w-full kinetic-gradient py-4 rounded-xl text-on-primary-fixed font-headline font-bold text-lg active:scale-95 transition-transform duration-200 mt-4 flex items-center justify-center gap-2 group disabled:opacity-70 disabled:active:scale-100" type="submit">
+                {pending ? 'Registrando...' : 'Crear Cuenta'}
+                {!pending && <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>}
               </button>
             </form>
 
