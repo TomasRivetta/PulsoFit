@@ -49,7 +49,7 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
               <span className={`bg-${routine.color_theme || 'primary'}/10 text-${routine.color_theme || 'primary'} text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest`}>
                 {routine.goal}
               </span>
-              <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">• {routine.frequency_days} Days / Week</span>
+              <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">• {routine.frequency_days} Días / Semana</span>
             </div>
             <h1 className={`text-4xl lg:text-7xl font-black font-headline tracking-tighter leading-none mb-6 italic text-${routine.color_theme || 'primary'}`}>
               {routine.title.toUpperCase()}
@@ -62,7 +62,7 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
           <div className="flex flex-wrap gap-3 lg:flex-col lg:min-w-[200px]">
             <Link href={`/dashboard/routines/${routine.id}/session`} className="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-gradient-to-br from-primary-container to-primary-dim text-on-primary-fixed font-black px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(202,253,0,0.2)] hover:shadow-[0_0_30px_rgba(202,253,0,0.3)] transition-all active:scale-95">
               <span className="material-symbols-outlined">play_arrow</span>
-              START ROUTINE
+              INICIAR RUTINA
             </Link>
             <div className="flex gap-3">
               <Link href={`/dashboard/routines/${routine.id}/edit`} className="flex-1 flex items-center justify-center p-4 bg-surface-container rounded-xl text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-all">
@@ -75,19 +75,19 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
           <div className="bg-surface-container-low p-6 rounded-2xl">
-            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Estimated Load</p>
+            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Carga Estimada</p>
             <p className="text-3xl font-black font-headline">{(totalVolume / 1000).toFixed(1)}k <span className="text-sm font-normal text-on-surface-variant">kg</span></p>
           </div>
           <div className="bg-surface-container-low p-6 rounded-2xl">
-            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Avg Duration</p>
+            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Duración Promedio</p>
             <p className="text-3xl font-black font-headline">{avgDuration} <span className="text-sm font-normal text-on-surface-variant">min</span></p>
           </div>
           <div className="bg-surface-container-low p-6 rounded-2xl">
-            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Difficulty</p>
+            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Dificultad</p>
             <p className="text-2xl font-black font-headline text-secondary tracking-tighter uppercase">{routine.difficulty}</p>
           </div>
           <div className="bg-surface-container-low p-6 rounded-2xl">
-            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Exercises</p>
+            <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Ejercicios</p>
             <p className="text-3xl font-black font-headline text-primary">{exercises.length}</p>
           </div>
         </div>
@@ -96,7 +96,7 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
       <div className="space-y-12">
         <article>
           <div className="flex flex-col md:flex-row md:items-baseline gap-4 mb-8">
-            <h2 className="text-4xl font-black font-headline italic tracking-tighter">EXERCISES</h2>
+            <h2 className="text-4xl font-black font-headline italic tracking-tighter">EJERCICIOS</h2>
             <div className="h-[2px] flex-grow bg-gradient-to-r from-outline-variant/30 to-transparent hidden md:block"></div>
             <span className="text-primary text-sm font-bold uppercase tracking-[0.2em]">{routine.goal}</span>
           </div>
@@ -113,7 +113,7 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
                   </div>
                   <div className="flex gap-6 lg:gap-8 mb-6">
                     <div>
-                      <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Sets</p>
+                      <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Series</p>
                       <p className="text-2xl font-black font-headline">{ex.sets}</p>
                     </div>
                     <div>
@@ -121,14 +121,14 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
                       <p className="text-2xl font-black font-headline">{ex.reps}</p>
                     </div>
                     <div>
-                      <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Weight</p>
+                      <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Peso</p>
                       <p className="text-2xl font-black font-headline text-primary">{ex.load} <span className="text-xs font-normal">kg</span></p>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-on-surface-variant text-xs group-hover:text-white transition-colors">
                   <span className="material-symbols-outlined text-sm">timer</span>
-                  <span>Rest {ex.rest}s between sets.</span>
+                  <span>Descanso {ex.rest}s entre series.</span>
                 </div>
               </div>
             ))}

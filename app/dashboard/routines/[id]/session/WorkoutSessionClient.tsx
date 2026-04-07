@@ -27,10 +27,10 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center bg-surface text-on-surface">
         <span className="material-symbols-outlined text-6xl text-on-surface-variant mb-4">gpp_bad</span>
-        <h2 className="text-3xl font-headline font-black italic mb-4">NO PROTOCOL FOUND</h2>
-        <p className="text-on-surface-variant max-w-sm mb-8">This routine has no exercises configured. Edit it first.</p>
+        <h2 className="text-3xl font-headline font-black italic mb-4">PROTOCOLO NO ENCONTRADO</h2>
+        <p className="text-on-surface-variant max-w-sm mb-8">Esta rutina no tiene ejercicios configurados. Edítala primero.</p>
         <Link href={`/dashboard/routines/${routine.id}`} className="bg-primary text-on-primary-fixed px-8 py-4 rounded-xl font-bold font-headline uppercase tracking-widest active:scale-95 transition-transform">
-          Go Back
+          Volver
         </Link>
       </div>
     );
@@ -168,12 +168,12 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
             <span className="text-2xl font-black text-primary italic tracking-tighter font-headline">KINETIC</span>
             <div className="h-6 w-[1px] bg-outline-variant/30 hidden md:block"></div>
             <div className="hidden md:flex gap-6">
-              <span className="text-primary font-bold font-headline text-sm uppercase tracking-widest">Active Session</span>
+              <span className="text-primary font-bold font-headline text-sm uppercase tracking-widest">Sesión Activa</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="text-on-surface-variant hover:text-error transition-colors active:scale-95 flex items-center gap-2">
-              <span className="text-xs uppercase tracking-widest font-bold">Abort</span>
+              <span className="text-xs uppercase tracking-widest font-bold">Abortar</span>
               <span className="material-symbols-outlined">close</span>
             </Link>
           </div>
@@ -204,7 +204,7 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
               <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
                 <div>
-                  <span className="text-primary font-headline font-black italic tracking-tighter text-sm uppercase">Exercise {currentExerciseIndex + 1} of {exercises.length}</span>
+                  <span className="text-primary font-headline font-black italic tracking-tighter text-sm uppercase">Ejercicio {currentExerciseIndex + 1} de {exercises.length}</span>
                   <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-white mt-2">{currentEx.name}</h1>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
                 <div className="absolute top-0 right-0 p-4 opacity-20">
                   <span className={`material-symbols-outlined text-6xl ${isTimerActive ? 'text-on-primary-container' : 'text-on-surface-variant'}`}>timer</span>
                 </div>
-                <span className={`font-headline text-xs uppercase tracking-[0.3em] mb-2 ${isTimerActive ? 'text-on-primary-container opacity-80' : 'text-on-surface-variant'}`}>Rest Timer</span>
+                <span className={`font-headline text-xs uppercase tracking-[0.3em] mb-2 ${isTimerActive ? 'text-on-primary-container opacity-80' : 'text-on-surface-variant'}`}>Descanso</span>
                 <div className={`text-5xl md:text-6xl font-headline font-black tracking-tighter tabular-nums ${isTimerActive ? 'text-on-primary-container' : 'text-white'}`}>
                   {formatTime(restTimeRemaining)}
                 </div>
@@ -228,13 +228,13 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
 
               {/* Placeholder Heart Rate */}
               <div className="bg-secondary-container/20 rounded-[2rem] p-8 flex flex-col items-center justify-center text-center border border-secondary/10">
-                <span className="text-secondary font-headline text-xs uppercase tracking-[0.3em] mb-2">Heart Rate</span>
+                <span className="text-secondary font-headline text-xs uppercase tracking-[0.3em] mb-2">Frecuencia Cardíaca</span>
                 <div className="text-5xl md:text-6xl font-headline font-black text-secondary tracking-tighter tabular-nums flex items-baseline gap-2">
-                  --- <span className="text-xl font-normal opacity-60">bpm</span>
+                  --- <span className="text-xl font-normal opacity-60">lpm</span>
                 </div>
                 <div className="mt-4 flex items-center gap-2 text-secondary/60">
                   <span className="material-symbols-outlined text-sm">watch</span>
-                  <span className="text-[10px] md:text-xs font-medium uppercase tracking-widest">Connect Device</span>
+                  <span className="text-[10px] md:text-xs font-medium uppercase tracking-widest">Conectar Disp.</span>
                 </div>
               </div>
             </div>
@@ -244,8 +244,8 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
           <div className="xl:col-span-5 space-y-6">
             <div className="bg-surface-container rounded-[2rem] p-4 md:p-8">
               <div className="flex justify-between items-center mb-8">
-                <h3 className="text-xl font-headline font-bold text-white">Track Progress</h3>
-                <span className="text-[10px] md:text-xs text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-full font-bold uppercase tracking-widest">Sets 1-{currentEx.sets}</span>
+                <h3 className="text-xl font-headline font-bold text-white">Progreso</h3>
+                <span className="text-[10px] md:text-xs text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-full font-bold uppercase tracking-widest">Series 1-{currentEx.sets}</span>
               </div>
 
               {/* Sets List */}
@@ -338,11 +338,11 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
 
               <div className="mt-12 flex flex-col gap-4">
                 <button onClick={nextExercise} disabled={isPending} className="w-full py-5 bg-primary-container hover:bg-primary transition-colors text-on-primary-fixed text-sm md:text-lg font-black font-headline uppercase tracking-widest rounded-2xl flex items-center justify-center gap-3 active:scale-[0.98] shadow-[0_20px_40px_rgba(0,0,0,0.4)] disabled:opacity-50">
-                  {isPending ? 'Saving Session...' : (currentExerciseIndex === exercises.length - 1 ? 'Finish Workout' : 'Next Exercise')}
+                  {isPending ? 'Guardando Sesión...' : (currentExerciseIndex === exercises.length - 1 ? 'Finalizar Entrenamiento' : 'Siguiente Ejercicio')}
                   {!isPending && <span className="material-symbols-outlined">{currentExerciseIndex === exercises.length - 1 ? 'done_all' : 'arrow_forward'}</span>}
                 </button>
                 <button onClick={finishWorkout} disabled={isPending} className="w-full py-4 border border-outline-variant/15 text-center text-on-surface-variant hover:text-white font-bold text-[10px] md:text-sm uppercase tracking-widest rounded-2xl transition-colors block disabled:opacity-50">
-                  Finish Workout Early
+                  Finalizar Entrenamiento Anticipadamente
                 </button>
               </div>
             </div>

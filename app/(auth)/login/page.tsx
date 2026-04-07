@@ -13,9 +13,9 @@ export default function LoginPage() {
         <section className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-surface-container-lowest">
           <div className="absolute inset-0 z-0">
             <img
-              alt="Hero Athlete"
+              alt="Atleta de Élite"
               className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-105"
-              data-alt="Intense close-up of an elite athlete in a dark high-end gym, dramatic rim lighting, sweat beads, focused expression, cinematic moody atmosphere"
+              data-alt="Primer plano intenso de un atleta de élite en un gimnasio de alta gama oscuro, iluminación dramática, gotas de sudor, expresión concentrada, atmósfera cinematográfica sombría"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWg5b8ZK3hInqRRD2oKn3JSUS_72HN52l7Lci5_ghtSPT0OP7tKhOI1GDYoVtkiQDeqfuy83q72XZ-JSQUKUyyGh_dbqlU8Tvtkyc6nrmzQaO3Sl73IqXMLB2JrGoyuz0LxpNavZPa_7h4TsookXrhYUpKR1ptCwQBq8w9khYL55Mw2z81NqMtL_lrLVzex61bH9B1avJiusxjt_QE22_H-b9qAKS5ETANuhXKFSPdTHpy_4V1DVDGt13VxXlxbGuXSew02FQngg"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-surface via-transparent to-transparent"></div>
@@ -58,9 +58,9 @@ export default function LoginPage() {
                 </div>
               )}
               <div className="space-y-2">
-                <label className="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant px-1" htmlFor="email">Email</label>
+                <label className="block text-xs font-semibold uppercase tracking-widest text-on-surface-variant px-1" htmlFor="email">Correo Electrónico</label>
                 <div className="relative group">
-                  <input name="email" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" id="email" placeholder="athlete@kinetic.com" type="email" />
+                  <input name="email" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" id="email" placeholder="atleta@kinetic.com" type="email" />
                 </div>
               </div>
               <div className="space-y-2">

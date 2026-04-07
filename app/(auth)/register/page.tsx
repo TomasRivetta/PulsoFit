@@ -18,22 +18,22 @@ export default function RegisterPage() {
         <section className="hidden md:flex md:w-1/2 lg:w-3/5 relative overflow-hidden bg-surface">
           <div className="absolute inset-0 z-0">
             <img
-              alt="High performance fitness"
+              alt="Fitness de alto rendimiento"
               className="w-full h-full object-cover opacity-60 scale-110 grayscale hover:grayscale-0 transition-all duration-1000"
-              data-alt="Intense close-up of a professional athlete in a dark, moody gym, dramatic cinematic lighting with electric lime highlights, smoke and grit texture"
+              data-alt="Primer plano intenso de un atleta profesional en un gimnasio oscuro, iluminación cinematográfica dramática con reflejos verde eléctrico, humo y textura"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUkjFdZhA0NKV4T3JzIT-tuYWiRGUPeev43_rMMy0BkWVUj4PGA2xyGchC6meLpmYR34GSUOa8Kp2G55oZ60n2QNYno-ItevqUeYVet1aruBMDxPHYX_uDNAe3J15J-70_mVdLkYXr9-JwANWCeAiQ5fdcd6TBcicuwuk6_vHa5OR9lPbUUGS8JSjFlk6fPx5IEu8b9UEZkLWfFJTs1eS-hb1YArIqw9qk20U9A_28KSFPxmnn70IYi8pNOllbFg_th56DwUimmw"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent to-background"></div>
           </div>
           <div className="relative z-10 flex flex-col justify-end p-16 w-full h-full">
             <div className="mb-8">
-              <span className="text-primary-container font-headline font-extrabold tracking-[0.2em] text-sm uppercase">Laboratory Mode</span>
+              <span className="text-primary-container font-headline font-extrabold tracking-[0.2em] text-sm uppercase">Modo Laboratorio</span>
               <h1 className="text-6xl lg:text-8xl font-headline font-black italic tracking-tighter leading-none mt-4">
-                LEVEL UP<br />YOUR <span className="text-primary-container">ENGINE</span>
+                ELEVA<br />TU <span className="text-primary-container">NIVEL</span>
               </h1>
             </div>
             <p className="text-on-surface-variant font-body max-w-md text-lg leading-relaxed">
-              Join the elite performance ecosystem. Precision tracking, scientific insights, and unstoppable kinetic energy.
+              Únete al ecosistema de rendimiento élite. Monitoreo de precisión, insights científicos y energía cinética imparable.
             </p>
           </div>
         </section>
@@ -49,7 +49,7 @@ export default function RegisterPage() {
               <span className="font-headline font-black italic tracking-tighter text-2xl text-primary-container">PULSO FIT</span>
             </div>
             <a className="text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors" href="#">
-              Help
+              Ayuda
             </a>
           </div>
 
@@ -77,9 +77,9 @@ export default function RegisterPage() {
               </div>
               
               <div className="space-y-2">
-                <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold px-1">Email</label>
+                <label className="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold px-1">Correo Electrónico</label>
                 <div className="relative">
-                  <input name="email" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="john@example.com" type="email" />
+                  <input name="email" required className="w-full bg-surface-container-lowest border-none rounded-xl py-4 px-5 pl-12 text-on-surface placeholder:text-outline/40 focus:ring-2 focus:ring-primary-dim/20 transition-all outline-none" placeholder="juan@ejemplo.com" type="email" />
                   <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">mail</span>
                 </div>
               </div>

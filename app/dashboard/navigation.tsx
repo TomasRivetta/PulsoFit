@@ -27,40 +27,40 @@ export function Navigation() {
       <aside className="h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col bg-[#0e0e0e] py-8 z-40">
         <div className="px-8 mt-4 mb-8">
           <div className="mt-8">
-            <p className="text-on-surface font-bold text-lg font-headline">Elite Performance</p>
-            <p className="text-on-surface-variant text-xs uppercase tracking-widest font-label">Laboratory Mode</p>
+            <p className="text-on-surface font-bold text-lg font-headline">Rendimiento Élite</p>
+            <p className="text-on-surface-variant text-xs uppercase tracking-widest font-label">Modo Laboratorio</p>
           </div>
         </div>
         <nav className="flex-1 space-y-2">
           <Link href="/dashboard" className={getSidebarItemClass(isDashboard)}>
             <span className="material-symbols-outlined">grid_view</span>
-            <span className="font-headline font-semibold">Dashboard</span>
+            <span className="font-headline font-semibold">Panel</span>
           </Link>
           <Link href="/dashboard/routines" className={getSidebarItemClass(isWorkouts)}>
             <span className="material-symbols-outlined">fitness_center</span>
-            <span className="font-headline font-semibold">Workouts</span>
+            <span className="font-headline font-semibold">Rutinas</span>
           </Link>
           <Link href="#" className={getSidebarItemClass(isHistory)}>
             <span className="material-symbols-outlined">history</span>
-            <span className="font-headline font-semibold">History</span>
+            <span className="font-headline font-semibold">Historial</span>
           </Link>
           <Link href="#" className={getSidebarItemClass(isStats)}>
             <span className="material-symbols-outlined">insights</span>
-            <span className="font-headline font-semibold">Analytics</span>
+            <span className="font-headline font-semibold">Estadísticas</span>
           </Link>
         </nav>
         
         <div className="px-6 mb-8">
           <Link href="/dashboard/routines/new" className="w-full bg-primary-container text-on-primary-fixed font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-primary-container/10">
             <span className="material-symbols-outlined">bolt</span>
-            Start Workout
+            Iniciar Entrenamiento
           </Link>
         </div>
 
         <div className="border-t border-outline-variant/10 pt-4 space-y-1">
           <Link href="#" className="text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm">
             <span className="material-symbols-outlined">help</span>
-            <span className="font-headline font-semibold">Support</span>
+            <span className="font-headline font-semibold">Soporte</span>
           </Link>
           <Link href="/dashboard/profile" className="text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm">
             <span className="material-symbols-outlined">person</span>
@@ -70,7 +70,7 @@ export function Navigation() {
           <form action="/auth/logout" method="post" className="w-full">
             <button className="w-full text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm cursor-pointer">
               <span className="material-symbols-outlined">logout</span>
-              <span className="font-headline font-semibold">Logout</span>
+              <span className="font-headline font-semibold">Cerrar Sesión</span>
             </button>
           </form>
         </div>
@@ -80,15 +80,15 @@ export function Navigation() {
       <nav className="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-[#0e0e0e]/90 backdrop-blur-2xl lg:hidden z-50 rounded-t-[2rem] border-t border-[#484847]/15 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
         <Link href="/dashboard" className={getBottomNavItemClass(isDashboard)}>
           <span className="material-symbols-outlined">home</span>
-          <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Home</span>
+          <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Inicio</span>
         </Link>
         <Link href="/dashboard/routines" className={getBottomNavItemClass(isWorkouts)}>
           <span className="material-symbols-outlined">bolt</span>
-          <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Train</span>
+          <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Entrenar</span>
         </Link>
         <Link href="#" className={getBottomNavItemClass(isHistory)}>
           <span className="material-symbols-outlined">calendar_today</span>
-          <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">History</span>
+          <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Historial</span>
         </Link>
         <Link href="/dashboard/profile" className={getBottomNavItemClass(false)}>{/* Added Profile for mobile just in case */}
           <span className="material-symbols-outlined">person</span>

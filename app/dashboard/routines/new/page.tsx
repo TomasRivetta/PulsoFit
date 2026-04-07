@@ -76,14 +76,14 @@ export default function NewRoutinePage() {
           <Link href="/dashboard/routines" className="text-on-surface-variant hover:text-primary transition-colors active:scale-95">
             <span className="material-symbols-outlined">close</span>
           </Link>
-          <h1 className="font-headline font-bold tracking-tight text-primary text-xl lg:text-3xl">Create Routine</h1>
+          <h1 className="font-headline font-bold tracking-tight text-primary text-xl lg:text-3xl">Crear Rutina</h1>
         </div>
         <button 
           type="submit"
           disabled={isPending}
           className="bg-primary-container text-on-primary-fixed font-headline font-bold px-6 py-2 rounded-xl active:scale-95 transition-transform hover:opacity-90 disabled:opacity-50"
         >
-          {isPending ? 'Saving...' : 'Save Routine'}
+          {isPending ? 'Guardando...' : 'Guardar Rutina'}
         </button>
       </div>
 
@@ -94,31 +94,31 @@ export default function NewRoutinePage() {
             <h2 className="font-headline text-3xl font-extrabold italic tracking-tighter text-primary mb-8 px-1">LABORATORY_CORE</h2>
             <div className="space-y-6">
               <div className="group">
-                <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-2 ml-1">Routine Name</label>
+                <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-2 ml-1">Nombre de la Rutina</label>
                 <input 
                   type="text" 
                   name="title"
                   required
-                  placeholder="e.g., Hypertrophy Phase A" 
+                  placeholder="ej. Fase A de Hipertrofia" 
                   className="w-full bg-surface-container-lowest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all placeholder:text-on-surface-variant/40 outline-none" 
                 />
               </div>
               <div className="group">
-                <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-2 ml-1">Primary Goal</label>
+                <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-2 ml-1">Objetivo Principal</label>
                 <select name="goal" className="w-full bg-surface-container-lowest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all appearance-none outline-none">
-                  <option value="Strength & Power">Strength &amp; Power</option>
-                  <option value="Hypertrophy">Muscle Hypertrophy</option>
-                  <option value="Endurance">Endurance &amp; Conditioning</option>
-                  <option value="Recovery">Active Recovery</option>
+                  <option value="Strength & Power">Fuerza y Potencia</option>
+                  <option value="Hypertrophy">Hipertrofia Muscular</option>
+                  <option value="Endurance">Resistencia y Acondicionamiento</option>
+                  <option value="Recovery">Recuperación Activa</option>
                 </select>
               </div>
               <div className="group">
-                <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-2 ml-1">Description</label>
+                <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-2 ml-1">Descripción</label>
                 <textarea 
                   name="description"
                   required
                   rows={4} 
-                  placeholder="Focus on eccentric control and explosive concentric movements..." 
+                  placeholder="Concéntrate en el control excéntrico y movimientos concéntricos explosivos..." 
                   className="w-full bg-surface-container-lowest border-none rounded-xl p-4 text-on-surface focus:ring-2 focus:ring-primary-dim/20 transition-all placeholder:text-on-surface-variant/40 resize-none outline-none"
                 ></textarea>
               </div>
@@ -126,9 +126,9 @@ export default function NewRoutinePage() {
           </section>
 
           <section>
-            <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-4 ml-1">Schedule Priority</label>
+            <label className="block text-xs font-label uppercase tracking-[0.2em] text-on-surface-variant mb-4 ml-1">Días de Entrenamiento</label>
             <div className="flex flex-wrap gap-3">
-              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => {
+              {['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'].map((day) => {
                 const isActive = activeDays.includes(day);
                 return (
                   <button 
@@ -151,9 +151,9 @@ export default function NewRoutinePage() {
           <div className="p-8 rounded-3xl bg-surface-container-low border border-outline-variant/10 relative overflow-hidden">
             <div className="relative z-10">
               <span className="material-symbols-outlined text-secondary text-4xl mb-4">analytics</span>
-              <h3 className="font-headline font-bold text-xl text-on-surface mb-2">Requirements Configured</h3>
+              <h3 className="font-headline font-bold text-xl text-on-surface mb-2">Requisitos Configurados</h3>
               <p className="text-on-surface-variant text-sm mb-6 leading-relaxed">
-                By tapping Save, this protocol will be embedded into your database and will appear immediately in your Workouts dashboard.
+                Al presionar Guardar, este protocolo se guardará en tu base de datos y aparecerá inmediatamente en tu panel de Entrenamientos.
               </p>
               <div className="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
                 <div className="h-full bg-secondary w-full shadow-[0_0_10px_rgba(103,156,255,0.4)]"></div>
@@ -166,8 +166,8 @@ export default function NewRoutinePage() {
         <div className="lg:col-span-7">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 px-1">
             <div>
-              <h2 className="font-headline text-3xl font-extrabold italic tracking-tighter text-on-surface">SEQUENCE_PROTOCOL</h2>
-              <p className="text-on-surface-variant text-sm mt-1">Configure your exercise flow parameters</p>
+              <h2 className="font-headline text-3xl font-extrabold italic tracking-tighter text-on-surface">PROTOCOLO_SECUENCIA</h2>
+              <p className="text-on-surface-variant text-sm mt-1">Configura los parámetros del flujo de ejercicios</p>
             </div>
             <button 
               type="button"
@@ -175,7 +175,7 @@ export default function NewRoutinePage() {
               className="flex items-center w-fit gap-2 text-primary-dim font-headline font-bold hover:text-primary transition-colors group"
             >
               <span className="material-symbols-outlined group-hover:rotate-90 transition-transform">add_circle</span>
-              ADD EXERCISE
+              AGREGAR EJERCICIO
             </button>
           </div>
 
@@ -213,7 +213,7 @@ export default function NewRoutinePage() {
                     </div>
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] uppercase tracking-widest text-on-surface-variant ml-1">Sets</label>
+                        <label className="text-[10px] uppercase tracking-widest text-on-surface-variant ml-1">Series</label>
                         <input 
                           type="number" 
                           value={exercise.sets}
@@ -231,7 +231,7 @@ export default function NewRoutinePage() {
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] uppercase tracking-widest text-on-surface-variant ml-1">Load (kg)</label>
+                        <label className="text-[10px] uppercase tracking-widest text-on-surface-variant ml-1">Carga (kg)</label>
                         <input 
                           type="number" 
                           value={exercise.load}
@@ -240,7 +240,7 @@ export default function NewRoutinePage() {
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] uppercase tracking-widest text-on-surface-variant ml-1">Rest (s)</label>
+                        <label className="text-[10px] uppercase tracking-widest text-on-surface-variant ml-1">Descanso (s)</label>
                         <input 
                           type="number" 
                           value={exercise.rest}
@@ -263,7 +263,7 @@ export default function NewRoutinePage() {
               <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center group-hover:scale-110 transition-transform">
                 <span className="material-symbols-outlined text-primary-dim">add</span>
               </div>
-              <span className="font-headline font-bold text-sm uppercase tracking-widest">Append protocol step</span>
+              <span className="font-headline font-bold text-sm uppercase tracking-widest">Añadir paso al protocolo</span>
             </button>
 
           </div>
