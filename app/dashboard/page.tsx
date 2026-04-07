@@ -75,7 +75,7 @@ export default async function DashboardPage() {
             CENTRO DE <span className="text-primary-dim">MANDO.</span>
           </h1>
           <p className="text-on-surface-variant text-lg mt-4 max-w-md font-body">
-            Bienvenido de nuevo, Atleta. Tus métricas están optimizadas para la sesión de alta intensidad de hoy.
+            Bienvenido de nuevo, Atleta.
           </p>
         </div>
         <div className="flex gap-4">
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
       {/* Bento Grid Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Primary Action: Routine of the Day */}
-        <section className="md:col-span-8 group relative overflow-hidden rounded-[2rem] bg-surface-container-high h-[400px]">
+        <section className="md:col-span-12 group relative overflow-hidden rounded-[2rem] bg-surface-container-high h-[400px]">
           <div className="absolute inset-0 z-0">
             <img
               alt="Atleta preparándose para sesión de levantamiento pesado"
@@ -130,38 +130,6 @@ export default async function DashboardPage() {
           </div>
         </section>
 
-        {/* Quick Stats Stack */}
-        <div className="md:col-span-4 flex flex-col gap-6">
-          <div className="glass-card flex-1 rounded-[2rem] p-8 flex flex-col justify-between border border-outline-variant/10">
-            <div>
-              <p className="text-on-surface-variant font-label text-[10px] uppercase tracking-widest mb-1">Gasto de Energía</p>
-              <h3 className="text-4xl font-headline font-black text-on-surface italic">
-                {currentStats.energy_expenditure_kcal.toLocaleString()} <span className="text-lg font-normal not-italic text-on-surface-variant">KCAL</span>
-              </h3>
-            </div>
-            <div className="w-full h-1.5 bg-surface-container-lowest rounded-full overflow-hidden mt-4">
-              <div 
-                className="h-full bg-primary-dim shadow-[0_0_10px_rgba(190,238,0,0.5)]" 
-                style={{ width: `${Math.min((currentStats.energy_expenditure_kcal / 3000) * 100, 100)}%` }}
-              ></div>
-            </div>
-          </div>
-          <div className="glass-card flex-1 rounded-[2rem] p-8 flex flex-col justify-between border border-outline-variant/10">
-            <div>
-              <p className="text-on-surface-variant font-label text-[10px] uppercase tracking-widest mb-1">Frecuencia Cardíaca Activa</p>
-              <h3 className="text-4xl font-headline font-black text-secondary italic">
-                {currentStats.active_heart_rate_bpm} <span className="text-lg font-normal not-italic text-on-surface-variant">BPM</span>
-              </h3>
-            </div>
-            <div className="flex items-end gap-1 h-12 mt-4">
-              <div className="w-2 bg-secondary/20 h-1/2 rounded-full"></div>
-              <div className="w-2 bg-secondary/40 h-3/4 rounded-full"></div>
-              <div className="w-2 bg-secondary/60 h-2/3 rounded-full"></div>
-              <div className="w-2 bg-secondary/80 h-full rounded-full"></div>
-              <div className="w-2 bg-secondary h-4/5 rounded-full"></div>
-            </div>
-          </div>
-        </div>
 
         {/* Weekly Progress Chart Card */}
         <section className="md:col-span-7 bg-surface-container rounded-[2rem] p-10 border border-outline-variant/10">
