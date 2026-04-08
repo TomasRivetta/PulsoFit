@@ -41,11 +41,11 @@ export function Navigation() {
             <span className="material-symbols-outlined">fitness_center</span>
             <span className="font-headline font-semibold">Rutinas</span>
           </Link>
-          <Link href="#" className={getSidebarItemClass(isHistory)}>
+          <Link href="/dashboard/history" className={getSidebarItemClass(isHistory)}>
             <span className="material-symbols-outlined">history</span>
             <span className="font-headline font-semibold">Historial</span>
           </Link>
-          <Link href="#" className={getSidebarItemClass(isStats)}>
+          <Link href="/dashboard/stats" className={getSidebarItemClass(isStats)}>
             <span className="material-symbols-outlined">insights</span>
             <span className="font-headline font-semibold">Estadísticas</span>
           </Link>
@@ -87,7 +87,7 @@ export function Navigation() {
           <span className="material-symbols-outlined">bolt</span>
           <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Entrenar</span>
         </Link>
-        <Link href="#" className={getBottomNavItemClass(isHistory)}>
+        <Link href="/dashboard/history" className={getBottomNavItemClass(isHistory)}>
           <span className="material-symbols-outlined">calendar_today</span>
           <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Historial</span>
         </Link>
