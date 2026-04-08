@@ -27,40 +27,52 @@ export default async function RoutinesPage() {
           </div>
           <div className="flex flex-col gap-4 w-full md:w-auto">
             <div className="relative group">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
-              <input className="w-full md:w-80 bg-surface-container-lowest border-none rounded-xl py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant focus:ring-1 focus:ring-primary-dim/20 transition-all outline-none" placeholder="Buscar rutinas..." type="text"/>
+              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-all duration-300 group-focus-within:scale-110">search</span>
+              <input 
+                className="w-full md:w-80 glass-card bg-surface-container/40 border border-outline-variant/20 rounded-2xl py-4 pl-12 pr-4 text-on-surface placeholder:text-on-surface-variant focus:ring-2 focus:ring-primary/20 focus:border-primary/30 transition-all outline-none shadow-lg group-hover:bg-surface-container/60" 
+                placeholder="Buscar rutinas..." 
+                type="text"
+              />
+              <div className="absolute inset-0 rounded-2xl bg-primary/5 opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none blur-xl -z-10" />
             </div>
           </div>
         </div>
         
-        <div className="flex items-center gap-4 mb-10 overflow-x-auto no-scrollbar pb-2">
-          <div className="group flex items-center bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-full pl-5 pr-3 py-2.5 gap-2 border border-outline-variant/10 hover:border-primary/20 shrink-0 cursor-pointer">
-            <span className="text-xs font-bold font-headline uppercase tracking-widest text-on-surface-variant transition-colors">Frecuencia:</span>
-            <div className="relative flex items-center">
-              <select className="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-6 outline-none appearance-none z-10 hover:text-primary-dim transition-colors">
-                <option>Todos</option>
-                <option>3 Días</option>
-                <option>4 Días</option>
-                <option>5+ Días</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-0 text-primary pointer-events-none transition-transform group-hover:translate-y-[2px]">expand_more</span>
+        <div className="relative mb-10 overflow-hidden">
+          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-4 pr-10 -mx-1 px-1">
+            <div className="group flex items-center glass-card bg-surface-container/50 hover:bg-surface-container-high transition-all rounded-2xl pl-4 pr-2 py-3 gap-2 border border-outline-variant/20 hover:border-primary/30 shrink-0 cursor-pointer active:scale-95">
+              <span className="text-[10px] font-bold font-headline uppercase tracking-[0.15em] text-on-surface-variant/80">Frecuencia</span>
+              <div className="relative flex items-center">
+                <select className="bg-transparent border-none text-sm font-extrabold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-6 outline-none appearance-none z-10 hover:text-primary-dim transition-colors">
+                  <option className="bg-surface-container-highest text-on-surface">Todos</option>
+                  <option className="bg-surface-container-highest text-on-surface">3 Días</option>
+                  <option className="bg-surface-container-highest text-on-surface">4 Días</option>
+                  <option className="bg-surface-container-highest text-on-surface">5+ Días</option>
+                </select>
+                <span className="material-symbols-outlined absolute right-0 text-primary/70 text-lg pointer-events-none transition-transform group-hover:translate-y-[1px]">expand_more</span>
+              </div>
             </div>
-          </div>
-          <div className="group flex items-center bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-full pl-5 pr-3 py-2.5 gap-2 border border-outline-variant/10 hover:border-primary/20 shrink-0 cursor-pointer">
-            <span className="text-xs font-bold font-headline uppercase tracking-widest text-on-surface-variant transition-colors">Objetivo:</span>
-            <div className="relative flex items-center">
-              <select className="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-6 outline-none appearance-none z-10 hover:text-primary-dim transition-colors">
-                <option>Hipertrofia</option>
-                <option>Fuerza</option>
-                <option>Resistencia</option>
-                <option>Movilidad</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-0 text-primary pointer-events-none transition-transform group-hover:translate-y-[2px]">expand_more</span>
+
+            <div className="group flex items-center glass-card bg-surface-container/50 hover:bg-surface-container-high transition-all rounded-2xl pl-4 pr-2 py-3 gap-2 border border-outline-variant/20 hover:border-primary/30 shrink-0 cursor-pointer active:scale-95">
+              <span className="text-[10px] font-bold font-headline uppercase tracking-[0.15em] text-on-surface-variant/80">Objetivo</span>
+              <div className="relative flex items-center">
+                <select className="bg-transparent border-none text-sm font-extrabold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-6 outline-none appearance-none z-10 hover:text-primary-dim transition-colors">
+                  <option className="bg-surface-container-highest text-on-surface">Hipertrofia</option>
+                  <option className="bg-surface-container-highest text-on-surface">Fuerza</option>
+                  <option className="bg-surface-container-highest text-on-surface">Resistencia</option>
+                  <option className="bg-surface-container-highest text-on-surface">Movilidad</option>
+                </select>
+                <span className="material-symbols-outlined absolute right-0 text-primary/70 text-lg pointer-events-none transition-transform group-hover:translate-y-[1px]">expand_more</span>
+              </div>
             </div>
+
+            <button className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-surface-variant/20 hover:bg-surface-variant/40 text-on-surface-variant hover:text-on-surface text-[10px] font-bold font-headline uppercase tracking-widest transition-all shrink-0 active:scale-95 border border-transparent hover:border-outline-variant/20">
+              <span className="material-symbols-outlined text-sm">filter_alt_off</span>
+              Limpiar
+            </button>
           </div>
-          <button className="bg-surface-variant/40 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface px-6 py-2.5 rounded-full text-sm font-bold font-headline transition-all shrink-0">
-            Limpiar Filtros
-          </button>
+          {/* Gradient fade to indicate scroll */}
+          <div className="absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-surface to-transparent pointer-events-none z-10 hidden sm:block" />
         </div>
         
         {/* Routine Bento Grid */}

@@ -9,6 +9,53 @@ interface StatsClientProps {
 
 export default function StatsClient({ userStats, sessions }: StatsClientProps) {
   
+  // Time Windows
+  const timeMetrics = useMemo(() => {
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+    
+    const currMonthSessions = sessions.filter(s => new Date(s.start_time) >= thirtyDaysAgo);
+    const prevMonthSessions = sessions.filter(s => {
+      const d = new Date(s.start_time);
+      return d >= sixtyDaysAgo && d < thirtyDaysAgo;
+    });
+
+    const calculateVolume = (sess: any[]) => sess.reduce((total, s) => {
+      const data = s.session_data || {};
+      let sessionVol = 0;
+      Object.values(data).forEach((sets: any) => {
+        sets.forEach((set: any) => {
+          if (set.completed) sessionVol += (parseFloat(set.load) || 0) * (parseInt(set.reps) || 0);
+        });
+      });
+      return total + sessionVol;
+    }, 0);
+
+    const calculateAvgDuration = (sess: any[]) => {
+      const durations = sess
+        .filter(s => s.end_time)
+        .map(s => (new Date(s.end_time!).getTime() - new Date(s.start_time).getTime()) / (1000 * 60));
+      return durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
+    };
+
+    const currVol = calculateVolume(currMonthSessions);
+    const prevVol = calculateVolume(prevMonthSessions);
+    const volChange = prevVol > 0 ? ((currVol - prevVol) / prevVol) * 100 : 0;
+
+    const currDur = calculateAvgDuration(currMonthSessions);
+    const prevDur = calculateAvgDuration(prevMonthSessions);
+    const durChange = prevDur > 0 ? (currDur - prevDur) : 0;
+
+    return { 
+      currVol, 
+      volChange, 
+      avgDuration: currDur, 
+      durTrend: durChange,
+      strengthIndex: (currVol / 1000).toFixed(2)
+    };
+  }, [sessions]);
+
   // Calculate Weekly Volume (Sum of all sets * reps * load for the last 7 days)
   const weeklyVolume = useMemo(() => {
     const oneWeekAgo = new Date();
@@ -50,7 +97,7 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
 
   // Muscle Group Volume (Legs, Back, Chest, Core)
   const muscleDistribution = useMemo(() => {
-    const dist = { Legs: 0, Back: 0, Chest: 0, Core: 0 };
+    const counts = { Legs: 0, Back: 0, Chest: 0, Core: 0 };
     
     sessions.forEach(s => {
       const exercises = s.routines?.exercises || [];
@@ -61,20 +108,79 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
         const completedCount = sets.filter((set: any) => set.completed).length;
         
         const target = (ex.target || '').toLowerCase();
-        if (target.includes('leg') || target.includes('quad') || target.includes('ham') || target.includes('glute')) dist.Legs += completedCount;
-        else if (target.includes('back') || target.includes('lats') || target.includes('traps')) dist.Back += completedCount;
-        else if (target.includes('chest') || target.includes('pecs')) dist.Chest += completedCount;
-        else if (target.includes('abs') || target.includes('core') || target.includes('oblique')) dist.Core += completedCount;
+        if (target.includes('leg') || target.includes('quad') || target.includes('ham') || target.includes('glute')) counts.Legs += completedCount;
+        else if (target.includes('back') || target.includes('lats') || target.includes('traps')) counts.Back += completedCount;
+        else if (target.includes('chest') || target.includes('pecs')) counts.Chest += completedCount;
+        else if (target.includes('abs') || target.includes('core') || target.includes('oblique')) counts.Core += completedCount;
       });
     });
 
-    const max = Math.max(...Object.values(dist), 1);
+    const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+    const maxVal = Math.max(...Object.values(counts), 1);
+    
+    // Determine dominant group
+    const dominantEntries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    const dominant = dominantEntries[0][0];
+    const focus = dominant === 'Legs' ? 'Tren Inferior' : 
+                  dominant === 'Chest' ? 'Pectorales' : 
+                  dominant === 'Back' ? 'Tracción' : 'Estabilidad';
+
     return { 
-      Legs: (dist.Legs / max) * 100, 
-      Back: (dist.Back / max) * 100, 
-      Chest: (dist.Chest / max) * 100, 
-      Core: (dist.Core / max) * 100 
+      Legs: (counts.Legs / maxVal) * 100, 
+      Back: (counts.Back / maxVal) * 100, 
+      Chest: (counts.Chest / maxVal) * 100, 
+      Core: (counts.Core / maxVal) * 100,
+      dominant,
+      focus
     };
+  }, [sessions]);
+
+  // Weight Evolution Data (Dynamic Chart generation)
+  const evolutionCharts = useMemo(() => {
+    const exerciseLoads: Record<string, { date: number, load: number }[]> = {};
+    
+    sessions.forEach(s => {
+      const date = new Date(s.start_time).getTime();
+      const routine = s.routines || {};
+      const data = s.session_data || {};
+      
+      (routine.exercises || []).forEach((ex: any) => {
+        const sets = data[ex.id] || [];
+        const maxLoad = Math.max(...sets.map((set: any) => set.completed ? parseFloat(set.load) || 0 : 0), 0);
+        if (maxLoad > 0) {
+          if (!exerciseLoads[ex.name]) exerciseLoads[ex.name] = [];
+          exerciseLoads[ex.name].push({ date, load: maxLoad });
+        }
+      });
+    });
+
+    // Top 2 exercises by points
+    const topExercises = Object.entries(exerciseLoads)
+      .sort((a, b) => b[1].length - a[1].length)
+      .slice(0, 2);
+
+    const ninetyDaysAgo = new Date();
+    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+    const startTs = ninetyDaysAgo.getTime();
+    const endTs = new Date().getTime();
+
+    const generatePath = (points: { date: number, load: number }[]) => {
+      if (points.length < 2) return "";
+      const maxL = Math.max(...points.map(p => p.load), 1);
+      const sorted = points.sort((a, b) => a.date - b.date);
+      
+      return sorted.map((p, i) => {
+        const x = ((p.date - startTs) / (endTs - startTs)) * 1000;
+        const y = 200 - (p.load / maxL) * 160;
+        return `${i === 0 ? 'M' : 'L'}${x},${y}`;
+      }).join(' ');
+    };
+
+    return topExercises.map(([name, points]) => ({
+      name,
+      path: generatePath(points),
+      currentMax: Math.max(...points.map(p => p.load))
+    }));
   }, [sessions]);
 
   // Milestones (Top weights per exercise)
@@ -123,8 +229,10 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
             </div>
           </div>
           <div className="bg-surface-container-high px-6 py-4 rounded-2xl border-l-4 border-secondary shadow-xl">
-            <div className="text-secondary text-[10px] font-bold uppercase tracking-widest mb-1">Rango de Intensidad</div>
-            <div className="text-3xl font-headline font-black text-white">Top 2%</div>
+            <div className="text-secondary text-[10px] font-bold uppercase tracking-widest mb-1">Status de Usuario</div>
+            <div className="text-3xl font-headline font-black text-white">
+              {frequencyData.avg >= 4 ? 'ELITE' : frequencyData.avg >= 2 ? 'PRO' : 'STD'}
+            </div>
           </div>
         </div>
       </header>
@@ -140,12 +248,14 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
               <p className="text-on-surface-variant text-sm font-medium">Levantamientos principales (Ventana de 3 meses)</p>
             </div>
             <div className="flex gap-2">
-              <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-surface-container-high rounded-full border border-outline-variant/10 text-white">
-                <span className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(202,253,0,0.5)]"></span> Peso Muerto
-              </span>
-              <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-surface-container-high rounded-full border border-outline-variant/10 text-white">
-                <span className="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(0,112,235,0.5)]"></span> Sentadilla
-              </span>
+              {evolutionCharts.map((chart, i) => (
+                <span key={i} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-surface-container-high rounded-full border border-outline-variant/10 text-white leading-none">
+                  <span className={`w-2 h-2 rounded-full shadow-lg ${i === 0 ? 'bg-primary shadow-primary/30' : 'bg-secondary shadow-secondary/30'}`}></span> {chart.name}
+                </span>
+              ))}
+              {evolutionCharts.length === 0 && (
+                <span className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest">Sin datos de carga</span>
+              )}
             </div>
           </div>
           
@@ -164,27 +274,32 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
                   <stop offset="100%" style={{ stopColor: 'rgba(202,253,0,0)', stopOpacity: 1 }} />
                 </linearGradient>
               </defs>
-              {/* Mock Path for visualization matches data flow */}
-              <path 
-                d="M0,180 Q100,160 200,175 T400,120 T600,100 T800,85 T1000,40" 
-                fill="none" 
-                stroke="#cafd00" 
-                strokeWidth="4" 
-                strokeLinecap="round" 
-              />
-              <path 
-                d="M0,180 Q100,160 200,175 T400,120 T600,100 T800,85 T1000,40 L1000,200 L0,200 Z" 
-                fill="url(#chartGrad)" 
-              />
-              <path 
-                d="M0,200 Q100,210 200,190 T400,180 T600,160 T800,150 T1000,120" 
-                fill="none" 
-                stroke="#679cff" 
-                strokeDasharray="8 4" 
-                strokeWidth="4" 
-                strokeLinecap="round" 
-                className="opacity-60"
-              />
+              
+              {evolutionCharts.map((chart, i) => (
+                <g key={i}>
+                  <path 
+                    d={chart.path} 
+                    fill="none" 
+                    stroke={i === 0 ? "#cafd00" : "#679cff"} 
+                    strokeWidth="4" 
+                    strokeLinecap="round" 
+                    strokeDasharray={i === 1 ? "8 4" : "0"}
+                    className={i === 1 ? "opacity-60" : ""}
+                  />
+                  {i === 0 && chart.path && (
+                    <path 
+                      d={`${chart.path} L1000,200 L0,200 Z`} 
+                      fill="url(#chartGrad)" 
+                    />
+                  )}
+                </g>
+              ))}
+              
+              {evolutionCharts.length === 0 && (
+                <text x="500" y="100" textAnchor="middle" className="fill-on-surface-variant/20 font-black italic uppercase text-2xl tracking-tighter">
+                  DATOS INSUFICIENTES.EXE
+                </text>
+              )}
             </svg>
             <div className="flex justify-between mt-6 text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] opacity-40">
               <span>OCT</span><span>NOV</span><span>DIC</span><span>ENE</span>
@@ -253,11 +368,11 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-surface-container p-5 rounded-2xl border border-outline-variant/5">
               <div className="text-[9px] text-secondary font-black uppercase tracking-widest mb-2">Dominante</div>
-              <div className="text-lg font-headline font-black italic text-white uppercase">Cadena Anterior</div>
+              <div className="text-lg font-headline font-black italic text-white uppercase">{muscleDistribution.dominant === 'Legs' ? 'Tren Inferior' : muscleDistribution.dominant === 'Back' ? 'Cadena Posterior' : muscleDistribution.dominant === 'Chest' ? 'Cadena Anterior' : 'Core Stability'}</div>
             </div>
             <div className="bg-surface-container p-5 rounded-2xl border border-outline-variant/5">
               <div className="text-[9px] text-primary-dim font-black uppercase tracking-widest mb-2">Enfoque</div>
-              <div className="text-lg font-headline font-black italic text-white uppercase">Cuádriceps</div>
+              <div className="text-lg font-headline font-black italic text-white uppercase">{muscleDistribution.focus}</div>
             </div>
           </div>
         </div>
@@ -271,11 +386,13 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
               </div>
               <div className="text-right">
                 <div className="text-on-surface-variant text-[9px] font-black uppercase tracking-widest mb-1">vs Mes Pasado</div>
-                <div className="text-primary font-black italic text-lg">+12.4%</div>
+                <div className={`${timeMetrics.volChange >= 0 ? 'text-primary' : 'text-red-400'} font-black italic text-lg`}>
+                  {timeMetrics.volChange >= 0 ? '+' : ''}{timeMetrics.volChange.toFixed(1)}%
+                </div>
               </div>
             </div>
             <h4 className="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-2">Índice de Fuerza</h4>
-            <div className="text-5xl font-headline font-black text-white italic">1.84<span className="text-base font-normal text-on-surface-variant ml-2 not-italic lowercase">kN</span></div>
+            <div className="text-5xl font-headline font-black text-white italic">{timeMetrics.strengthIndex}<span className="text-base font-normal text-on-surface-variant ml-2 not-italic lowercase">kN</span></div>
           </div>
 
           <div className="bg-surface-container p-8 rounded-[2.5rem] border border-outline-variant/5 shadow-xl relative overflow-hidden group hover:ring-1 hover:ring-secondary/20 transition-all">
@@ -284,12 +401,14 @@ export default function StatsClient({ userStats, sessions }: StatsClientProps) {
                 <span className="material-symbols-outlined text-3xl">timer</span>
               </div>
               <div className="text-right">
-                <div className="text-on-surface-variant text-[9px] font-black uppercase tracking-widest mb-1">Eficiencia</div>
-                <div className="text-secondary font-black italic text-lg">-4m avg</div>
+                <div className="text-on-surface-variant text-[9px] font-black uppercase tracking-widest mb-1">Tendencia</div>
+                <div className={`${timeMetrics.durTrend <= 0 ? 'text-secondary' : 'text-primary'} font-black italic text-lg`}>
+                  {timeMetrics.durTrend <= 0 ? '' : '+'}{timeMetrics.durTrend.toFixed(0)}m avg
+                </div>
               </div>
             </div>
             <h4 className="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-2">Duración Med. Sesión</h4>
-            <div className="text-5xl font-headline font-black text-white italic">68<span className="text-base font-normal text-on-surface-variant ml-2 not-italic lowercase">min</span></div>
+            <div className="text-5xl font-headline font-black text-white italic">{timeMetrics.avgDuration.toFixed(0)}<span className="text-base font-normal text-on-surface-variant ml-2 not-italic lowercase">min</span></div>
           </div>
 
           {/* Recent Milestones Table */}

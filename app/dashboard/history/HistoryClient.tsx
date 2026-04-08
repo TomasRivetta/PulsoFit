@@ -11,6 +11,7 @@ export default function HistoryClient({ initialSessions }: HistoryClientProps) {
   const [dateFilter, setDateFilter] = useState('30_DAYS');
   const [typeFilter, setTypeFilter] = useState('ALL');
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
   // Filter logic
   const filteredSessions = useMemo(() => {
@@ -22,20 +23,29 @@ export default function HistoryClient({ initialSessions }: HistoryClientProps) {
     }
 
     // Date Filter
-    const now = new Date();
-    if (dateFilter === '7_DAYS') {
-      const limit = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      sessions = sessions.filter(s => new Date(s.start_time) >= limit);
-    } else if (dateFilter === '30_DAYS') {
-      const limit = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-      sessions = sessions.filter(s => new Date(s.start_time) >= limit);
-    } else if (dateFilter === '90_DAYS') {
-      const limit = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-      sessions = sessions.filter(s => new Date(s.start_time) >= limit);
+    if (selectedDay) {
+      sessions = sessions.filter(s => {
+        const sDate = new Date(s.start_time);
+        return sDate.getDate() === selectedDay.getDate() && 
+               sDate.getMonth() === selectedDay.getMonth() && 
+               sDate.getFullYear() === selectedDay.getFullYear();
+      });
+    } else {
+      const now = new Date();
+      if (dateFilter === '7_DAYS') {
+        const limit = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        sessions = sessions.filter(s => new Date(s.start_time) >= limit);
+      } else if (dateFilter === '30_DAYS') {
+        const limit = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        sessions = sessions.filter(s => new Date(s.start_time) >= limit);
+      } else if (dateFilter === '90_DAYS') {
+        const limit = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+        sessions = sessions.filter(s => new Date(s.start_time) >= limit);
+      }
     }
 
     return sessions;
-  }, [initialSessions, dateFilter, typeFilter]);
+  }, [initialSessions, dateFilter, typeFilter, selectedDay]);
 
   // Calendar logic
   const daysInMonth = useMemo(() => {
@@ -73,6 +83,14 @@ export default function HistoryClient({ initialSessions }: HistoryClientProps) {
 
   const toggleExpand = (id: string) => {
     setExpandedSession(expandedSession === id ? null : id);
+  };
+
+  const handleDayClick = (day: Date) => {
+    if (selectedDay && day.toDateString() === selectedDay.toDateString()) {
+      setSelectedDay(null);
+    } else {
+      setSelectedDay(new Date(day));
+    }
   };
 
   const formatMonth = (date: Date) => {
@@ -169,22 +187,29 @@ export default function HistoryClient({ initialSessions }: HistoryClientProps) {
                 const hasSession = hasSessionOnDay(day);
                 const type = getSessionTypeOnDay(day);
                 const isToday = day.toDateString() === new Date().toDateString();
+                const isSelected = selectedDay && day.toDateString() === selectedDay.toDateString();
                 
                 return (
-                  <div key={idx} className="relative flex flex-col items-center group">
+                  <button 
+                    key={idx} 
+                    onClick={() => handleDayClick(day)}
+                    className="relative flex flex-col items-center group outline-none"
+                  >
                     <div className={`
                       w-10 h-10 flex items-center justify-center rounded-xl text-xs font-bold transition-all
-                      ${hasSession 
-                        ? (type === 'cardio' ? 'bg-secondary/20 text-secondary border border-secondary/30' : 'bg-primary-container/20 text-primary border border-primary/30') 
-                        : 'hover:bg-surface-container text-on-surface-variant/50'}
-                      ${isToday && !hasSession ? 'border border-primary/20 text-white' : ''}
+                      ${isSelected 
+                        ? 'bg-primary text-on-primary-fixed shadow-[0_0_15px_rgba(202,253,0,0.4)] scale-110 z-10' 
+                        : (hasSession 
+                          ? (type === 'cardio' ? 'bg-secondary/20 text-secondary border border-secondary/30 hover:bg-secondary/30' : 'bg-primary-container/20 text-primary border border-primary/30 hover:bg-primary/30') 
+                          : 'hover:bg-surface-container text-on-surface-variant/50')}
+                      ${isToday && !hasSession && !isSelected ? 'border border-primary/20 text-white' : ''}
                     `}>
                       {day.getDate()}
                     </div>
-                    {hasSession && (
+                    {hasSession && !isSelected && (
                       <div className={`mt-1 w-1 h-1 rounded-full ${type === 'cardio' ? 'bg-secondary shadow-[0_0_8px_rgba(0,112,235,0.5)]' : 'bg-primary shadow-[0_0_8px_rgba(202,253,0,0.5)]'}`}></div>
                     )}
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -200,8 +225,18 @@ export default function HistoryClient({ initialSessions }: HistoryClientProps) {
           </div>
 
           {/* Quick Stats Summary */}
-          <div className="bg-gradient-to-br from-surface-container to-surface-container-high rounded-[2.5rem] p-10 border border-outline-variant/10 shadow-2xl">
-            <h4 className="font-headline font-black text-sm uppercase tracking-[0.2em] mb-8 text-on-surface-variant">Resumen de Periodo</h4>
+          <div className="bg-gradient-to-br from-surface-container to-surface-container-high rounded-[2.5rem] p-10 border border-outline-variant/10 shadow-2xl relative overflow-hidden">
+            {selectedDay && (
+              <button 
+                onClick={() => setSelectedDay(null)}
+                className="absolute top-4 right-4 text-[9px] font-black uppercase tracking-widest text-primary flex items-center gap-1 hover:text-white transition-colors"
+              >
+                Limpiar <span className="material-symbols-outlined text-xs">close</span>
+              </button>
+            )}
+            <h4 className="font-headline font-black text-sm uppercase tracking-[0.2em] mb-8 text-on-surface-variant">
+              {selectedDay ? 'Registro del Día' : 'Resumen de Periodo'}
+            </h4>
             <div className="space-y-6">
               <div className="flex justify-between items-end">
                 <span className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Sesiones Totales</span>
