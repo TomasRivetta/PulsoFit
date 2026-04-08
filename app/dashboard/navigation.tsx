@@ -10,6 +10,7 @@ export function Navigation() {
   const isWorkouts = pathname?.startsWith('/dashboard/routines');
   const isHistory = pathname?.startsWith('/dashboard/history');
   const isStats = pathname?.startsWith('/dashboard/stats');
+  const isProfile = pathname === '/dashboard/profile';
 
   const getSidebarItemClass = (active: boolean) => 
     active
@@ -62,7 +63,7 @@ export function Navigation() {
             <span className="material-symbols-outlined">help</span>
             <span className="font-headline font-semibold">Soporte</span>
           </Link>
-          <Link href="/dashboard/profile" className="text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm">
+          <Link href="/dashboard/profile" className={getSidebarItemClass(isProfile) + " !shadow-none !border-r-0 !px-6 !py-3 text-sm"}>
             <span className="material-symbols-outlined">person</span>
             <span className="font-headline font-semibold">Perfil</span>
           </Link>
@@ -90,7 +91,7 @@ export function Navigation() {
           <span className="material-symbols-outlined">calendar_today</span>
           <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Historial</span>
         </Link>
-        <Link href="/dashboard/profile" className={getBottomNavItemClass(false)}>{/* Added Profile for mobile just in case */}
+        <Link href="/dashboard/profile" className={getBottomNavItemClass(isProfile)}>
           <span className="material-symbols-outlined">person</span>
           <span className="font-['Inter'] text-[10px] font-medium uppercase tracking-widest mt-1">Perfil</span>
         </Link>
