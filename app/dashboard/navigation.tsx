@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { logout } from '@/app/(auth)/actions';
 
 export function Navigation() {
   const pathname = usePathname();
@@ -68,8 +69,8 @@ export function Navigation() {
             <span className="font-headline font-semibold">Perfil</span>
           </Link>
           {/* Logout Form using Next.js form action logic assuming handled in actions or via standard route */}
-          <form action="/auth/logout" method="post" className="w-full">
-            <button className="w-full text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm cursor-pointer">
+          <form action={logout} className="w-full">
+            <button className="w-full text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm cursor-pointer border-none bg-transparent">
               <span className="material-symbols-outlined">logout</span>
               <span className="font-headline font-semibold">Cerrar Sesión</span>
             </button>

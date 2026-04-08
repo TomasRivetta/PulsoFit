@@ -64,3 +64,16 @@ export async function signup(prevState: any, formData: FormData) {
   revalidatePath('/', 'layout')
   redirect('/dashboard')
 }
+
+export async function logout() {
+  const supabase = await createClient()
+  const { error } = await supabase.auth.signOut()
+
+  if (error) {
+    console.error('Error signing out:', error.message)
+    return { error: error.message }
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/login')
+}

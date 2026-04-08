@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { logout } from '@/app/(auth)/actions';
 
 interface ProfileClientProps {
   user: any;
@@ -97,13 +98,22 @@ export function ProfileClient({ user, displayName, avatarUrl }: ProfileClientPro
           </div>
           <p className="text-on-surface-variant font-medium mb-6">{user.email}</p>
           
-          <button 
-            onClick={() => setIsEditing(true)}
-            className="py-3 px-8 rounded-2xl bg-surface-bright text-on-surface font-bold text-sm uppercase tracking-widest border border-outline-variant/15 hover:bg-surface-container-highest hover:border-primary/30 transition-all flex items-center justify-center gap-2 group w-full sm:w-fit"
-          >
-            <span className="material-symbols-outlined text-sm group-hover:rotate-12 transition-transform">edit</span>
-            Editar Perfil
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button 
+              onClick={() => setIsEditing(true)}
+              className="flex-1 py-3 px-8 rounded-2xl bg-surface-bright text-on-surface font-bold text-sm uppercase tracking-widest border border-outline-variant/15 hover:bg-surface-container-highest hover:border-primary/30 transition-all flex items-center justify-center gap-2 group"
+            >
+              <span className="material-symbols-outlined text-sm group-hover:rotate-12 transition-transform">edit</span>
+              Editar Perfil
+            </button>
+            <button 
+              onClick={() => logout()}
+              className="py-3 px-6 rounded-2xl bg-error/10 text-error font-bold text-sm uppercase tracking-widest border border-error/20 hover:bg-error/20 transition-all flex items-center justify-center gap-2 group w-full sm:w-fit"
+            >
+              <span className="material-symbols-outlined text-sm">logout</span>
+              Cerrar Sesión
+            </button>
+          </div>
         </div>
       </div>
     );
