@@ -196,20 +196,20 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
           
           {/* Left Column: Media & Timer */}
           <div className="xl:col-span-7 space-y-8">
-            {/* Hero Exercise Card */}
-            <div className="relative group rounded-[2rem] overflow-hidden bg-surface-container aspect-video shadow-2xl">
+            {/* Exercise Title Header */}
+            <div>
+              <span className="text-primary font-headline font-black italic tracking-tighter text-sm uppercase">Ejercicio {currentExerciseIndex + 1} de {exercises.length} {currentEx.target && <span className="text-outline-variant">/ {currentEx.target}</span>}</span>
+              <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-white mt-1 capitalize leading-tight">{currentEx.name}</h1>
+            </div>
+
+            {/* Hero Exercise Video Card */}
+            <div className="relative group rounded-[2rem] overflow-hidden bg-surface-container aspect-video shadow-2xl ring-1 ring-outline-variant/10">
               <img 
                 alt="Exercise Demonstration" 
                 className={`w-full h-full object-cover mix-blend-screen transition-opacity duration-1000 ${currentEx.gifUrl ? 'opacity-100' : 'opacity-40'}`} 
                 src={currentEx.gifUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuC3Bupu1B6jnfLeY7zbZu8rIdZ6kDlKZlrRic8w3CBZ1B_KvZjpFM2xm2wRwpghXNkLmbKo28da2xepsc_z8AViCDiAplb_6jNVnxCjeyeBAcrVnsi-ZRGmkzGj5AIl6AoqLOCgirXi0VSwtu9R_Ei20YVPHWRco1FLPu00q-9tmyLtf4sVKYpLfYB4Vvq8LpIHq5nDng1ZAYpgfKw78fUH4wOQYEF_atAfpsvEt1mc8XpfT_o_8P-QKt7esXK112abYxrcvU9EjQ"}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-black/60 to-transparent"></div>
-              <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
-                <div>
-                  <span className="text-primary font-headline font-black italic tracking-tighter text-sm uppercase">Ejercicio {currentExerciseIndex + 1} de {exercises.length} {currentEx.target && <span className="text-outline-variant">/ {currentEx.target}</span>}</span>
-                  <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-white mt-2 capitalize">{currentEx.name}</h1>
-                </div>
-              </div>
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
             </div>
 
             {/* Instructions */}
@@ -226,32 +226,19 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
                 </ol>
               </div>
             )}
-
             {/* Rest Timer Section */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-4">
               <div className={`rounded-[2rem] p-8 flex flex-col items-center justify-center text-center relative overflow-hidden group transition-colors duration-500 ${isTimerActive ? 'bg-primary-container text-on-primary-container' : 'bg-surface-container-high'}`}>
                 <div className="absolute top-0 right-0 p-4 opacity-20">
                   <span className={`material-symbols-outlined text-6xl ${isTimerActive ? 'text-on-primary-container' : 'text-on-surface-variant'}`}>timer</span>
                 </div>
-                <span className={`font-headline text-xs uppercase tracking-[0.3em] mb-2 ${isTimerActive ? 'text-on-primary-container opacity-80' : 'text-on-surface-variant'}`}>Descanso</span>
-                <div className={`text-5xl md:text-6xl font-headline font-black tracking-tighter tabular-nums ${isTimerActive ? 'text-on-primary-container' : 'text-white'}`}>
+                <span className={`font-headline text-xs uppercase tracking-[0.3em] mb-2 ${isTimerActive ? 'text-on-primary-container opacity-80' : 'text-on-surface-variant'}`}>Temporizador de Descanso</span>
+                <div className={`text-6xl md:text-8xl font-headline font-black tracking-tighter tabular-nums ${isTimerActive ? 'text-on-primary-container' : 'text-white'}`}>
                   {formatTime(restTimeRemaining)}
                 </div>
                 <div className="flex gap-4 mt-6">
-                  <button onClick={() => adjustTimer(-30)} className={`px-4 py-2 md:px-6 md:py-2 rounded-full border text-xs font-bold transition-all ${isTimerActive ? 'border-on-primary-container/20 hover:bg-black/10' : 'border-outline-variant/30 hover:bg-white/5'}`}>-30s</button>
-                  <button onClick={() => adjustTimer(+30)} className={`px-4 py-2 md:px-6 md:py-2 rounded-full border text-xs font-bold transition-all ${isTimerActive ? 'border-on-primary-container/20 hover:bg-black/10' : 'border-outline-variant/30 hover:bg-white/5'}`}>+30s</button>
-                </div>
-              </div>
-
-              {/* Placeholder Heart Rate */}
-              <div className="bg-secondary-container/20 rounded-[2rem] p-8 flex flex-col items-center justify-center text-center border border-secondary/10">
-                <span className="text-secondary font-headline text-xs uppercase tracking-[0.3em] mb-2">Frecuencia Cardíaca</span>
-                <div className="text-5xl md:text-6xl font-headline font-black text-secondary tracking-tighter tabular-nums flex items-baseline gap-2">
-                  --- <span className="text-xl font-normal opacity-60">lpm</span>
-                </div>
-                <div className="mt-4 flex items-center gap-2 text-secondary/60">
-                  <span className="material-symbols-outlined text-sm">watch</span>
-                  <span className="text-[10px] md:text-xs font-medium uppercase tracking-widest">Conectar Disp.</span>
+                  <button onClick={() => adjustTimer(-30)} className={`px-6 py-3 rounded-full border text-xs font-black transition-all uppercase tracking-widest ${isTimerActive ? 'border-on-primary-container/20 hover:bg-black/10' : 'border-outline-variant/30 hover:bg-white/5'}`}>-30s</button>
+                  <button onClick={() => adjustTimer(+30)} className={`px-6 py-3 rounded-full border text-xs font-black transition-all uppercase tracking-widest ${isTimerActive ? 'border-on-primary-container/20 hover:bg-black/10' : 'border-outline-variant/30 hover:bg-white/5'}`}>+30s</button>
                 </div>
               </div>
             </div>

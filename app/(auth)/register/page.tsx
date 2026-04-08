@@ -66,7 +66,7 @@ export default function RegisterPage() {
         </section>
         
         {/* Right Side: Deployment Form */}
-        <section className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 relative overflow-hidden bg-surface">
+        <section className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-16 lg:p-24 relative overflow-hidden bg-surface">
           {/* Aura background for registration side */}
           <div className="absolute bottom-[10%] left-[10%] w-[35%] h-[35%] bg-secondary/3 rounded-full blur-[120px] pointer-events-none z-0"></div>
           
@@ -81,7 +81,7 @@ export default function RegisterPage() {
               <div className="inline-block bg-secondary/10 text-secondary text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-md mb-4 border border-secondary/20">
                 Data_Provisioning
               </div>
-              <h2 className="text-white font-headline font-black text-5xl tracking-tighter italic mb-4 uppercase">Crear Cuenta.</h2>
+              <h2 className="text-white font-headline font-black text-4xl md:text-5xl tracking-tighter italic mb-4 uppercase">Crear Cuenta.</h2>
               <p className="text-on-surface-variant text-sm font-medium leading-relaxed opacity-70">
                 Asigna tus identificadores y únete a la red global de entrenamiento inteligente.
               </p>
@@ -94,7 +94,7 @@ export default function RegisterPage() {
                 </div>
               )}
               
-              <div className="grid grid-cols-2 gap-5 group">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 group">
                 <div className="space-y-3">
                   <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 ml-1">Nombre</label>
                   <input name="nombre" required className="w-full bg-surface-container-highest/50 border border-outline-variant/10 rounded-2xl py-4 px-6 text-on-surface focus:border-secondary/40 focus:bg-surface-container-highest transition-all outline-none font-bold placeholder:text-white/10" placeholder="PILA" type="text" />
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-3">
                   <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 ml-1">Clave</label>
                   <input name="password" required minLength={6} className="w-full bg-surface-container-highest/50 border border-outline-variant/10 rounded-2xl py-4 px-6 text-on-surface focus:border-secondary/40 focus:bg-surface-container-highest transition-all outline-none font-bold placeholder:text-white/10" placeholder="••••••••" type="password" />

@@ -70,7 +70,7 @@ export default function LoginPage() {
         </section>
         
         {/* Right Side: Access Portal Form */}
-        <section className="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16 lg:p-24 relative overflow-hidden">
+        <section className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-16 lg:p-24 relative overflow-hidden">
           {/* Subtle secondary aura for form side */}
           <div className="absolute top-[20%] left-[20%] w-[40%] h-[40%] bg-primary/3 rounded-full blur-[100px] pointer-events-none z-0"></div>
           
@@ -89,7 +89,7 @@ export default function LoginPage() {
               <div className="inline-block bg-primary/10 text-primary text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded-md mb-4 border border-primary/20">
                 Acceso_Autorizado
               </div>
-              <h2 className="text-white font-headline font-black text-5xl tracking-tighter italic mb-4">BIENVENIDO.</h2>
+              <h2 className="text-white font-headline font-black text-4xl md:text-5xl tracking-tighter italic mb-4">BIENVENIDO.</h2>
               <p className="text-on-surface-variant text-sm font-medium leading-relaxed opacity-70">
                 Sincroniza tus parámetros de entrenamiento y accede a la base de datos de rendimiento.
               </p>
@@ -125,7 +125,7 @@ export default function LoginPage() {
                   <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 group-focus-within:text-primary transition-colors" htmlFor="password">
                     Código de Acceso
                   </label>
-                  <a className="text-[9px] font-black text-primary/50 hover:text-primary transition-colors uppercase tracking-widest" href="#">¿Recordar Clave?</a>
+                  <a className="text-[9px] font-black text-primary/50 hover:text-primary transition-colors uppercase tracking-widest" href="/forgot-password">¿Recordar Clave?</a>
                 </div>
                 <div className="relative">
                   <input 
