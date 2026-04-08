@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { updateRoutineAction } from '../../actions';
+import { ExerciseSearchInput } from '../../components/ExerciseSearchInput';
 
 interface RoutineExercise {
   id: string;
@@ -12,11 +13,14 @@ interface RoutineExercise {
   reps: number;
   load: number;
   rest: number;
+  gifUrl?: string;
+  instructions?: string[];
+  target?: string;
 }
 
 export function EditClientForm({ routine }: { routine: any }) {
   const [isPending, startTransition] = useTransition();
-  const [activeDays, setActiveDays] = useState<string[]>(['Mon', 'Wed', 'Fri'].slice(0, routine.frequency_days));
+  const [activeDays, setActiveDays] = useState<string[]>(routine.scheduled_days || []);
   const [exercises, setExercises] = useState<RoutineExercise[]>(routine.exercises || []);
 
   const handleDayToggle = (day: string) => {
@@ -44,6 +48,10 @@ export function EditClientForm({ routine }: { routine: any }) {
 
   const updateExercise = (id: string, field: keyof RoutineExercise, value: string | number) => {
     setExercises(exercises.map(ex => ex.id === id ? { ...ex, [field]: value } : ex));
+  };
+
+  const updateExerciseData = (id: string, updates: Partial<RoutineExercise>) => {
+    setExercises(exercises.map(ex => ex.id === id ? { ...ex, ...updates } : ex));
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -165,21 +173,47 @@ export function EditClientForm({ routine }: { routine: any }) {
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-6">
                       <div className="flex items-center gap-4 w-full mr-4">
-                        <div className="w-14 h-14 rounded-2xl bg-surface-container-highest flex items-center justify-center overflow-hidden shrink-0">
-                          <span className="material-symbols-outlined text-outline-variant text-3xl">fitness_center</span>
+                        <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center overflow-hidden shrink-0 border border-outline-variant/10 shadow-sm relative">
+                          {(() => {
+                            const gifToShow = exercise.gifUrl || (exercise.id.length === 4 ? `/api/exercises/image/${exercise.id}` : null);
+                            return gifToShow ? (
+                              <img 
+                                src={gifToShow} 
+                                alt={exercise.name} 
+                                loading="lazy"
+                                className="w-full h-full object-cover mix-blend-multiply absolute inset-0" 
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-surface-container-highest flex items-center justify-center">
+                                <span className="material-symbols-outlined text-outline-variant text-3xl">fitness_center</span>
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div className="flex-1">
-                          <input 
-                            type="text" 
+                          <ExerciseSearchInput 
                             value={exercise.name} 
-                            onChange={e => updateExercise(exercise.id, 'name', e.target.value)}
+                            onChange={(name: string, details?: any) => {
+                              if (details) {
+                                updateExerciseData(exercise.id, { 
+                                  name, 
+                                  gifUrl: details.gifUrl, 
+                                  instructions: details.instructions, 
+                                  target: details.target,
+                                  category: details.target || details.bodyPart || 'General'
+                                });
+                              } else {
+                                updateExerciseData(exercise.id, { name });
+                              }
+                            }}
                             className="font-headline font-bold text-lg text-on-surface bg-transparent border-none p-0 focus:ring-0 w-full"
+                            placeholder="Buscar o escribir ejercicio..."
                           />
                           <input 
                             type="text"
                             value={exercise.category}
                             onChange={e => updateExercise(exercise.id, 'category', e.target.value)}
-                            className="text-[10px] font-label uppercase tracking-widest text-secondary font-bold bg-transparent border-none p-0 focus:ring-0 w-full"
+                            className="text-[10px] font-label uppercase tracking-widest text-secondary font-bold bg-transparent border-none p-0 focus:ring-0 w-full mt-1"
                           />
                         </div>
                       </div>

@@ -12,6 +12,9 @@ interface RoutineExercise {
   reps: number;
   load: number;
   rest: number;
+  gifUrl?: string;
+  instructions?: string[];
+  target?: string;
 }
 
 interface SetRecord {
@@ -195,20 +198,34 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
           <div className="xl:col-span-7 space-y-8">
             {/* Hero Exercise Card */}
             <div className="relative group rounded-[2rem] overflow-hidden bg-surface-container aspect-video shadow-2xl">
-              {/* Fallback image */}
               <img 
                 alt="Exercise Demonstration" 
-                className="w-full h-full object-cover opacity-60" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3Bupu1B6jnfLeY7zbZu8rIdZ6kDlKZlrRic8w3CBZ1B_KvZjpFM2xm2wRwpghXNkLmbKo28da2xepsc_z8AViCDiAplb_6jNVnxCjeyeBAcrVnsi-ZRGmkzGj5AIl6AoqLOCgirXi0VSwtu9R_Ei20YVPHWRco1FLPu00q-9tmyLtf4sVKYpLfYB4Vvq8LpIHq5nDng1ZAYpgfKw78fUH4wOQYEF_atAfpsvEt1mc8XpfT_o_8P-QKt7esXK112abYxrcvU9EjQ"
+                className={`w-full h-full object-cover mix-blend-screen transition-opacity duration-1000 ${currentEx.gifUrl ? 'opacity-100' : 'opacity-40'}`} 
+                src={currentEx.gifUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuC3Bupu1B6jnfLeY7zbZu8rIdZ6kDlKZlrRic8w3CBZ1B_KvZjpFM2xm2wRwpghXNkLmbKo28da2xepsc_z8AViCDiAplb_6jNVnxCjeyeBAcrVnsi-ZRGmkzGj5AIl6AoqLOCgirXi0VSwtu9R_Ei20YVPHWRco1FLPu00q-9tmyLtf4sVKYpLfYB4Vvq8LpIHq5nDng1ZAYpgfKw78fUH4wOQYEF_atAfpsvEt1mc8XpfT_o_8P-QKt7esXK112abYxrcvU9EjQ"}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e] via-black/60 to-transparent"></div>
               <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
                 <div>
-                  <span className="text-primary font-headline font-black italic tracking-tighter text-sm uppercase">Ejercicio {currentExerciseIndex + 1} de {exercises.length}</span>
-                  <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-white mt-2">{currentEx.name}</h1>
+                  <span className="text-primary font-headline font-black italic tracking-tighter text-sm uppercase">Ejercicio {currentExerciseIndex + 1} de {exercises.length} {currentEx.target && <span className="text-outline-variant">/ {currentEx.target}</span>}</span>
+                  <h1 className="text-4xl md:text-5xl font-headline font-extrabold tracking-tight text-white mt-2 capitalize">{currentEx.name}</h1>
                 </div>
               </div>
             </div>
+
+            {/* Instructions */}
+            {currentEx.instructions && currentEx.instructions.length > 0 && (
+              <div className="bg-surface-container-low rounded-[2rem] p-6 md:p-8 border border-outline-variant/5">
+                <h4 className="text-white font-headline font-bold mb-4 flex gap-2 items-center tracking-wide">
+                  <span className="material-symbols-outlined text-primary">psychology</span> 
+                  Técnica de Ejecución
+                </h4>
+                <ol className="space-y-4 pl-4 list-decimal marker:text-primary marker:font-black">
+                  {currentEx.instructions.map((step, i) => (
+                    <li key={i} className="text-on-surface-variant text-sm leading-relaxed">{step}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
 
             {/* Rest Timer Section */}
             <div className="grid grid-cols-2 gap-4">

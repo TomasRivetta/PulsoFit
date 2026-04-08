@@ -24,7 +24,8 @@ export default async function DashboardPage() {
     .select('*')
     .eq('user_id', user.id)
 
-  const todayString = new Date().toLocaleString('es-ES', { weekday: 'short' }).toUpperCase().replace('.', '');
+  const daysMap = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+  const todayString = daysMap[new Date().getDay()];
 
   // Fetch "routine of the day" by finding the first routine that has today's day included in scheduled_days
   const { data: featuredRoutineData } = await supabase

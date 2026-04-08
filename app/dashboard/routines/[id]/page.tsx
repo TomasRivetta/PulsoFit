@@ -11,6 +11,9 @@ interface RoutineExercise {
   rest: number;
   sets: number;
   category: string;
+  gifUrl?: string;
+  instructions?: string[];
+  target?: string;
 }
 
 export default async function RoutineDetailedPage({ params }: { params: Promise<{ id: string }> }) {
@@ -27,12 +30,10 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
   
   // Calculate total volume estimate: sum of (sets * reps * load)
   const totalVolume = exercises.reduce((acc, ex) => acc + (ex.sets * ex.reps * ex.load), 0);
-  // Avg duration calculated (very simple pseudo formula) or use routine.duration_mins
   const avgDuration = routine.duration_mins || 60;
 
   return (
     <>
-      {/* Top action header for mobile navigation mostly */}
       <div className="flex items-center gap-4 mb-8 hidden">
         <Link href="/dashboard/routines" className="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-200">
           <span className="material-symbols-outlined">arrow_back</span>
@@ -101,35 +102,81 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
             <span className="text-primary text-sm font-bold uppercase tracking-[0.2em]">{routine.goal}</span>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {exercises.map((ex) => (
-              <div key={ex.id} className="bg-surface-container group hover:bg-surface-container-high transition-colors rounded-2xl overflow-hidden p-6 flex flex-col justify-between min-h-[220px]">
-                <div>
-                  <div className="flex justify-between items-start mb-4 gap-4">
-                    <h3 className="text-xl font-bold font-headline leading-tight">{ex.name}</h3>
-                    <span className="text-[9px] font-bold bg-primary-container/20 text-primary-fixed-dim px-2 py-1 flex-shrink-0 uppercase whitespace-nowrap rounded tracking-widest">
-                      {ex.category}
-                    </span>
-                  </div>
-                  <div className="flex gap-6 lg:gap-8 mb-6">
-                    <div>
-                      <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Series</p>
-                      <p className="text-2xl font-black font-headline">{ex.sets}</p>
+              <div key={ex.id} className="bg-surface-container group hover:bg-surface-container-high transition-colors rounded-[2rem] overflow-hidden p-6 flex flex-col justify-between min-h-[220px] border border-transparent hover:border-outline-variant/10">
+                <div className="flex flex-col sm:flex-row gap-6">
+                  {(() => {
+                    const gifToShow = ex.gifUrl || (ex.id.length === 4 ? `/api/exercises/image/${ex.id}` : null);
+                    return gifToShow ? (
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-2xl flex-shrink-0 overflow-hidden relative">
+                        <img 
+                          src={gifToShow} 
+                          alt={`Demostración de ${ex.name}`} 
+                          loading="lazy" 
+                          className="w-full h-full object-cover mix-blend-multiply absolute inset-0"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 bg-surface-container-highest rounded-2xl flex-shrink-0 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-4xl text-outline-variant">fitness_center</span>
+                      </div>
+                    );
+                  })()}
+
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start mb-4 gap-4">
+                      <div>
+                        <h3 className="text-xl font-bold font-headline leading-tight capitalize">{ex.name}</h3>
+                        {ex.target && (
+                          <div className="flex gap-2 mt-1">
+                            <span className="text-[10px] font-bold bg-primary/10 text-primary px-2 py-0.5 rounded tracking-widest uppercase">
+                              {ex.target}
+                            </span>
+                            <span className="text-[10px] font-bold bg-surface-variant/30 text-on-surface-variant px-2 py-0.5 rounded tracking-widest uppercase">
+                              {ex.category}
+                            </span>
+                          </div>
+                        )}
+                        {!ex.target && (
+                          <span className="text-[10px] mt-1 font-bold bg-primary-container/20 text-primary-fixed-dim px-2 py-1 uppercase rounded tracking-widest inline-block">
+                            {ex.category}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Reps</p>
-                      <p className="text-2xl font-black font-headline">{ex.reps}</p>
-                    </div>
-                    <div>
-                      <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Peso</p>
-                      <p className="text-2xl font-black font-headline text-primary">{ex.load} <span className="text-xs font-normal">kg</span></p>
+                    
+                    <div className="flex gap-6 lg:gap-8 mb-4">
+                      <div>
+                        <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Series</p>
+                        <p className="text-2xl font-black font-headline text-on-surface">{ex.sets}</p>
+                      </div>
+                      <div>
+                        <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Reps</p>
+                        <p className="text-2xl font-black font-headline text-on-surface">{ex.reps}</p>
+                      </div>
+                      <div>
+                        <p className="text-on-surface-variant text-[10px] uppercase tracking-widest">Peso</p>
+                        <p className="text-2xl font-black font-headline text-primary">{ex.load} <span className="text-xs font-normal">kg</span></p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-on-surface-variant text-xs group-hover:text-white transition-colors">
-                  <span className="material-symbols-outlined text-sm">timer</span>
-                  <span>Descanso {ex.rest}s entre series.</span>
+
+                <div className="mt-4 pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-on-surface-variant text-xs group-hover:text-white transition-colors">
+                    <span className="material-symbols-outlined text-sm">timer</span>
+                    <span>Descanso {ex.rest}s entre series.</span>
+                  </div>
+                  {ex.instructions && ex.instructions.length > 0 && (
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="text-[10px] text-primary uppercase font-bold tracking-widest flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs">info</span> Técnica Disp.
+                      </span>
+                    </div>
+                  )}
                 </div>
+
               </div>
             ))}
           </div>

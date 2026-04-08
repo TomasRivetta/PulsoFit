@@ -34,25 +34,31 @@ export default async function RoutinesPage() {
         </div>
         
         <div className="flex items-center gap-4 mb-10 overflow-x-auto no-scrollbar pb-2">
-          <div className="flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant/10 shrink-0">
-            <span className="text-xs font-bold font-headline uppercase tracking-widest text-on-surface-variant">Frecuencia:</span>
-            <select className="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer p-0 pr-6 outline-none appearance-none">
-              <option>Todos</option>
-              <option>3 Días</option>
-              <option>4 Días</option>
-              <option>5+ Días</option>
-            </select>
+          <div className="group flex items-center bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-full pl-5 pr-3 py-2.5 gap-2 border border-outline-variant/10 hover:border-primary/20 shrink-0 cursor-pointer">
+            <span className="text-xs font-bold font-headline uppercase tracking-widest text-on-surface-variant transition-colors">Frecuencia:</span>
+            <div className="relative flex items-center">
+              <select className="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-6 outline-none appearance-none z-10 hover:text-primary-dim transition-colors">
+                <option>Todos</option>
+                <option>3 Días</option>
+                <option>4 Días</option>
+                <option>5+ Días</option>
+              </select>
+              <span className="material-symbols-outlined absolute right-0 text-primary pointer-events-none transition-transform group-hover:translate-y-[2px]">expand_more</span>
+            </div>
           </div>
-          <div className="flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant/10 shrink-0">
-            <span className="text-xs font-bold font-headline uppercase tracking-widest text-on-surface-variant">Objetivo:</span>
-            <select className="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer p-0 pr-6 outline-none appearance-none">
-              <option>Hipertrofia</option>
-              <option>Fuerza</option>
-              <option>Resistencia</option>
-              <option>Movilidad</option>
-            </select>
+          <div className="group flex items-center bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-full pl-5 pr-3 py-2.5 gap-2 border border-outline-variant/10 hover:border-primary/20 shrink-0 cursor-pointer">
+            <span className="text-xs font-bold font-headline uppercase tracking-widest text-on-surface-variant transition-colors">Objetivo:</span>
+            <div className="relative flex items-center">
+              <select className="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer py-0 pl-1 pr-6 outline-none appearance-none z-10 hover:text-primary-dim transition-colors">
+                <option>Hipertrofia</option>
+                <option>Fuerza</option>
+                <option>Resistencia</option>
+                <option>Movilidad</option>
+              </select>
+              <span className="material-symbols-outlined absolute right-0 text-primary pointer-events-none transition-transform group-hover:translate-y-[2px]">expand_more</span>
+            </div>
           </div>
-          <button className="bg-surface-variant/40 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface px-6 py-2 rounded-full text-sm font-bold font-headline transition-all shrink-0">
+          <button className="bg-surface-variant/40 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface px-6 py-2.5 rounded-full text-sm font-bold font-headline transition-all shrink-0">
             Limpiar Filtros
           </button>
         </div>
