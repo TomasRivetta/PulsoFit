@@ -52,24 +52,13 @@ export function Navigation() {
           </Link>
         </nav>
         
-        <div className="px-6 mb-8">
-          <Link href="/dashboard/routines/new" className="w-full bg-primary-container text-on-primary-fixed font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-primary-container/10">
-            <span className="material-symbols-outlined">bolt</span>
-            Iniciar Entrenamiento
-          </Link>
-        </div>
-
         <div className="border-t border-outline-variant/10 pt-4 space-y-1">
-          <Link href="#" className="text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm">
-            <span className="material-symbols-outlined">help</span>
-            <span className="font-headline font-semibold">Soporte</span>
-          </Link>
           <Link href="/dashboard/profile" className={getSidebarItemClass(isProfile) + " !shadow-none !border-r-0 !px-6 !py-3 text-sm"}>
             <span className="material-symbols-outlined">person</span>
             <span className="font-headline font-semibold">Perfil</span>
           </Link>
           {/* Logout Form using Next.js form action logic assuming handled in actions or via standard route */}
-          <form action={logout} className="w-full">
+          <form action={async () => { await logout(); }} className="w-full">
             <button className="w-full text-[#adaaaa] px-6 py-3 flex items-center gap-4 hover:bg-[#131313] hover:text-white transition-all text-sm cursor-pointer border-none bg-transparent">
               <span className="material-symbols-outlined">logout</span>
               <span className="font-headline font-semibold">Cerrar Sesión</span>

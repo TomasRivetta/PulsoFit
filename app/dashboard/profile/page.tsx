@@ -69,13 +69,6 @@ export default async function ProfilePage() {
             </div>
           </section>
 
-          <section className="bg-primary/5 rounded-[2rem] p-8 border border-primary/10 group hover:bg-primary/10 transition-colors">
-            <p className="text-[10px] text-primary font-bold uppercase tracking-[0.2em] mb-3">Soporte Técnico</p>
-            <p className="text-sm text-on-surface-variant mb-6 leading-relaxed">¿Necesitas ayuda con tu cuenta o el protocolo de entrenamiento?</p>
-            <button className="w-full py-3 rounded-xl bg-surface-container-highest text-on-surface font-bold text-[10px] uppercase tracking-widest border border-outline-variant/10 hover:border-primary/50 transition-all">
-              Contactar Soporte
-            </button>
-          </section>
         </div>
       </div>
     </div>

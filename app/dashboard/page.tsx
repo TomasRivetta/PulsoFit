@@ -19,11 +19,6 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .single()
 
-  const { data: goals } = await supabase
-    .from('goals')
-    .select('*')
-    .eq('user_id', user.id)
-
   const daysMap = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
   const todayString = daysMap[new Date().getDay()];
 
@@ -38,34 +33,9 @@ export default async function DashboardPage() {
 
   const featuredRoutine: any = featuredRoutineData;
 
-  const defaultStats = {
-    daily_streak: 0,
-    energy_expenditure_kcal: 0,
-    active_heart_rate_bpm: 0,
-    weekly_output_volume_kg: {
-      LUN: 0, MAR: 0, MIE: 0, JUE: 0, VIE: 0, SAB: 0, DOM: 0
-    }
-  }
-
   const currentStats = {
-    daily_streak: stats?.daily_streak ?? defaultStats.daily_streak,
-    energy_expenditure_kcal: stats?.energy_expenditure_kcal ?? defaultStats.energy_expenditure_kcal,
-    active_heart_rate_bpm: stats?.active_heart_rate_bpm ?? defaultStats.active_heart_rate_bpm,
-    weekly_output_volume_kg: stats?.weekly_output_volume_kg ?? defaultStats.weekly_output_volume_kg
+    daily_streak: stats?.daily_streak ?? 0,
   };
-  const weeklyData = (currentStats.weekly_output_volume_kg as Record<string, number>) || defaultStats.weekly_output_volume_kg;
-
-  const chartCols = [
-    { day: 'LUN', h: `${weeklyData['LUN'] || 10}%`, active: false },
-    { day: 'MAR', h: `${weeklyData['MAR'] || 10}%`, active: false },
-    { day: 'MIE', h: `${weeklyData['MIE'] || 10}%`, active: true },
-    { day: 'JUE', h: `${weeklyData['JUE'] || 10}%`, active: false },
-    { day: 'VIE', h: `${weeklyData['VIE'] || 10}%`, active: false },
-    { day: 'SAB', h: `${weeklyData['SAB'] || 10}%`, active: false },
-    { day: 'DOM', h: `${weeklyData['DOM'] || 10}%`, active: false },
-  ];
-
-  const hasGoals = goals && goals.length > 0;
 
   return (
     <>
@@ -88,7 +58,7 @@ export default async function DashboardPage() {
       </header>
 
       {/* Bento Grid Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-12">
         {/* Primary Action: Routine of the Day */}
         <section className="md:col-span-12 group relative overflow-hidden rounded-[2rem] bg-surface-container-high h-[400px]">
           <div className="absolute inset-0 z-0">
@@ -131,75 +101,7 @@ export default async function DashboardPage() {
           </div>
         </section>
 
-
-        {/* Weekly Progress Chart Card */}
-        <section className="md:col-span-7 bg-surface-container rounded-[2rem] p-10 border border-outline-variant/10">
-          <div className="flex justify-between items-start mb-10">
-            <div>
-              <h3 className="text-2xl font-headline font-black italic text-on-surface">RENDIMIENTO SEMANAL</h3>
-              <p className="text-on-surface-variant text-sm">Rendimiento de volumen (Kgs movidos)</p>
-            </div>
-            <select className="bg-surface-container-high border-none text-on-surface text-xs font-bold rounded-lg px-4 py-2 focus:ring-1 focus:ring-primary/30 outline-none">
-              <option>Últimos 7 Días</option>
-              <option>Último Mes</option>
-            </select>
-          </div>
-          <div className="flex items-end justify-between h-48 gap-4 px-2">
-            {chartCols.map((col, i) => (
-              <div key={i} className="flex flex-col items-center gap-4 flex-1">
-                <div
-                  className={`w-full rounded-t-xl transition-all ${
-                    col.active
-                      ? 'bg-primary-container shadow-[0_0_20px_rgba(202,253,0,0.3)]'
-                      : 'bg-surface-container-high hover:bg-primary-container/20'
-                  }`}
-                  style={{ height: col.h }}
-                ></div>
-                <span
-                  className={`text-[10px] font-bold font-label ${
-                    col.active ? 'text-primary' : 'text-on-surface-variant'
-                  }`}
-                >
-                  {col.day}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Active Goals Section */}
-        <section className="md:col-span-5 bg-surface-container-high rounded-[2rem] p-10 border border-outline-variant/10">
-          <div className="flex items-center gap-3 mb-8">
-            <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-              stars
-            </span>
-            <h3 className="text-2xl font-headline font-black italic text-on-surface">OBJETIVOS</h3>
-          </div>
-          
-          <div className="space-y-6">
-            {!hasGoals ? (
-              <p className="text-sm text-on-surface-variant">No se encontraron objetivos activos. Configura tus metas para medir el progreso aquí.</p>
-            ) : (
-              goals.map((goal) => (
-                <div className="group" key={goal.id}>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-bold text-on-surface">{goal.title}</span>
-                    <span className={`text-xs font-label text-${goal.color_theme || 'primary'}`}>{goal.progress_percentage}%</span>
-                  </div>
-                  <div className="h-1 bg-surface-container-lowest rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full bg-${goal.color_theme || 'primary-container'} w-[${goal.progress_percentage}%]`}
-                      style={{ width: `${goal.progress_percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-          <button className="mt-10 w-full py-4 rounded-xl bg-surface-bright text-on-surface font-bold text-sm uppercase tracking-widest border border-outline-variant/15 hover:bg-surface-container-highest transition-all">
-            Administrar Metas
-          </button>
-        </section>
+        {/* Placeholder or Future Sections can be added below */}
       </div>
     </>
   );
