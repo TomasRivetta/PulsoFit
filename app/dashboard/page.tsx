@@ -60,45 +60,68 @@ export default async function DashboardPage() {
       {/* Bento Grid Dashboard */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-12">
         {/* Primary Action: Routine of the Day */}
-        <section className="md:col-span-12 group relative overflow-hidden rounded-[2rem] bg-surface-container-high h-[400px]">
-          <div className="absolute inset-0 z-0">
-            <img
-              alt="Atleta preparándose para sesión de levantamiento pesado"
-              className="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-700"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEvlUTalL53GxMOWy-So1a3ussRP1OVPvCEFNtJzDkG8KHH_D5-gkWElAg0nklzsc7xIKn0Y7nk7DVn05tJCDHCKuVE7z7MtueYi2sUYmHFAe3RQnP_DmOTQRLa2WJ38IrwBeZQ0USiaHPXJU5g-TGZvNYuIX5zE0DvhfLCclKmQHoLqqiYRRAw6zY5kOapa-wG2m6L0jPvsMSaOyKKaoKmDbGfxQgyF23qvKHdEiYTPHLtqMF5ypRDdU9qC8-R7FVdC8_2nwRvA"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-surface-container-highest via-surface-container-highest/40 to-transparent"></div>
-          </div>
-          <div className="relative z-10 h-full p-10 flex flex-col justify-end">
-            <span className="bg-primary-container text-on-primary-fixed text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full w-fit mb-4">
-              Rutina del Día
-            </span>
-            <h2 className="text-3xl md:text-5xl font-headline font-black italic text-on-surface tracking-tighter mb-2 uppercase">
-              {featuredRoutine?.title || 'No hay rutinas asignadas a este día'}
-            </h2>
-            {featuredRoutine && (
-              <div className="flex items-center gap-6 text-on-surface-variant font-medium text-sm">
-                <span className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary text-base">timer</span> {featuredRoutine.duration_mins} MIN
+        <section className="md:col-span-12 group relative overflow-hidden rounded-[2rem] h-[400px] hero-lab-gradient border border-outline-variant/30 flex flex-col justify-end p-10 hover:border-primary-dim/30 transition-colors duration-500">
+          <div className="scanline"></div>
+          
+          <div className="relative z-10 w-full">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+              <div className="flex-1">
+                <span className="inline-flex items-center gap-2 bg-primary-container/10 border border-primary-container/20 text-primary-container text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1.5 rounded-md mb-6 backdrop-blur-md">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                  </span>
+                  {featuredRoutine ? 'Misión Activa' : 'Sistema en Espera'}
                 </span>
-                <span className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary text-base">bolt</span> {featuredRoutine.difficulty?.toUpperCase()}
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary text-base">fitness_center</span> {featuredRoutine.goal?.toUpperCase()}
-                </span>
+                
+                <h2 className="text-4xl md:text-6xl font-headline font-black italic text-on-surface tracking-tighter mb-4 uppercase leading-none text-shadow-glow">
+                  {featuredRoutine?.title || (
+                    <span className="text-on-surface-variant/50">
+                      SIN <span className="text-on-surface">PROTOCOLOS</span> ASIGNADOS
+                    </span>
+                  )}
+                </h2>
+
+                {featuredRoutine ? (
+                  <div className="flex flex-wrap items-center gap-6 text-on-surface-variant font-medium text-sm">
+                    <span className="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-lg border border-outline-variant/20">
+                      <span className="material-symbols-outlined text-primary text-lg">timer</span> {featuredRoutine.duration_mins} MIN
+                    </span>
+                    <span className="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-lg border border-outline-variant/20">
+                      <span className="material-symbols-outlined text-primary text-lg">bolt</span> {featuredRoutine.difficulty?.toUpperCase()}
+                    </span>
+                    <span className="flex items-center gap-2 px-3 py-1 bg-surface-container rounded-lg border border-outline-variant/20">
+                      <span className="material-symbols-outlined text-primary text-lg">fitness_center</span> {featuredRoutine.goal?.toUpperCase()}
+                    </span>
+                  </div>
+                ) : (
+                  <p className="text-on-surface-variant max-w-sm text-lg font-body leading-relaxed">
+                    Tu plan de entrenamiento está listo para ser desplegado. Selecciona una rutina para comenzar tu evolución.
+                  </p>
+                )}
               </div>
-            )}
-            {featuredRoutine ? (
-              <Link href={`/dashboard/routines/${featuredRoutine.id}/session`} className="mt-8 flex items-center justify-center bg-on-surface text-surface px-8 py-4 rounded-xl font-bold font-headline uppercase tracking-widest hover:bg-primary-container hover:text-on-primary-fixed transition-colors active:scale-95 w-fit">
-                Iniciar Sesión
-              </Link>
-            ) : (
-              <Link href="/dashboard/routines/new" className="mt-8 flex items-center justify-center bg-on-surface text-surface px-8 py-4 rounded-xl font-bold font-headline uppercase tracking-widest hover:bg-primary-container hover:text-on-primary-fixed transition-colors active:scale-95 w-fit">
-                Crear Protocolo
-              </Link>
-            )}
+
+              <div className="flex flex-shrink-0">
+                {featuredRoutine ? (
+                  <Link href={`/dashboard/routines/${featuredRoutine.id}/session`} className="group/btn relative overflow-hidden bg-primary-container text-on-primary-fixed px-10 py-5 rounded-2xl font-black font-headline uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(202,253,0,0.2)]">
+                    <span className="relative z-10 flex items-center gap-3">
+                      Iniciar Sesión <span className="material-symbols-outlined translate-y-[1px] group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                    </span>
+                  </Link>
+                ) : (
+                  <Link href="/dashboard/routines/new" className="group/btn relative overflow-hidden bg-on-surface text-surface px-10 py-5 rounded-2xl font-black font-headline uppercase tracking-[0.2em] transition-all hover:bg-primary-container hover:text-on-primary-fixed hover:scale-105 active:scale-95">
+                    <span className="relative z-10 flex items-center gap-3">
+                      Crear Protocolo <span className="material-symbols-outlined translate-y-[1px]">add</span>
+                    </span>
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
+
+          {/* Decorative Corner Accents */}
+          <div className="absolute top-0 right-0 w-32 h-32 border-t-2 border-r-2 border-primary/10 rounded-tr-[2rem] pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-32 h-32 border-b-2 border-l-2 border-primary/10 rounded-bl-[2rem] pointer-events-none"></div>
         </section>
 
         {/* Placeholder or Future Sections can be added below */}

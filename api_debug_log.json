@@ -1,22 +1,20 @@
 {
-  "bodyPart": "upper legs",
-  "equipment": "barbell",
-  "id": "0024",
-  "name": "barbell bench front squat",
-  "target": "quads",
+  "bodyPart": "upper arms",
+  "equipment": "assisted (towel)",
+  "id": "0018",
+  "name": "assisted standing triceps extension (with towel)",
+  "target": "triceps",
   "secondaryMuscles": [
-    "hamstrings",
-    "glutes",
-    "calves"
+    "shoulders"
   ],
   "instructions": [
-    "Start by standing with your feet shoulder-width apart and the barbell resting on your upper chest, just below your collarbone.",
-    "Hold the barbell with an overhand grip, keeping your elbows up and your upper arms parallel to the ground.",
-    "Lower your body down into a squat position by bending at the knees and hips, keeping your back straight and your chest up.",
-    "Pause for a moment at the bottom of the squat, then push through your heels to return to the starting position.",
+    "Stand with your feet shoulder-width apart and hold a towel with both hands behind your head.",
+    "Keep your elbows close to your ears and your upper arms stationary.",
+    "Slowly extend your forearms upward, squeezing your triceps at the top.",
+    "Pause for a moment, then slowly lower the towel back down to the starting position.",
     "Repeat for the desired number of repetitions."
   ],
-  "description": "The barbell bench front squat is a compound lower body exercise that targets the quadriceps, with secondary emphasis on the hamstrings, glutes, and calves. It requires holding a barbell in the front rack position and performing a squat, demanding good core stability, balance, and mobility.",
-  "difficulty": "intermediate",
+  "description": "The assisted standing triceps extension (with towel) is an exercise targeting the triceps using a towel for assistance. It is performed standing, with the towel held behind the head, extending the arms upward to work the triceps.",
+  "difficulty": "beginner",
   "category": "strength"
 }
