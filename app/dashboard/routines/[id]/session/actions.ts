@@ -2,8 +2,9 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import type { WorkoutSessionData } from '@/lib/domain/workout-sessions'
 
-export async function saveWorkoutSessionAction(routineId: string, sessionData: any, startTime: string) {
+export async function saveWorkoutSessionAction(routineId: string, sessionData: WorkoutSessionData, startTime: string) {
   const supabase = await createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
@@ -43,7 +44,7 @@ export async function saveWorkoutSessionAction(routineId: string, sessionData: a
     .eq('user_id', user.id)
     .maybeSingle()
 
-  let currentStreak = stats?.daily_streak || 0
+  const currentStreak = stats?.daily_streak || 0
   let newStreak = currentStreak
 
   if (previousSession && previousSession.end_time) {

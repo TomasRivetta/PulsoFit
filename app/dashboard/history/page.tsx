@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import HistoryClient from './HistoryClient'
+import type { WorkoutSessionWithRoutine } from '@/lib/domain/workout-sessions'
 
 export default async function HistoryPage() {
   const supabase = await createClient()
@@ -36,7 +37,7 @@ export default async function HistoryPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
-      <HistoryClient initialSessions={sessions || []} />
+      <HistoryClient initialSessions={(sessions || []) as WorkoutSessionWithRoutine[]} />
     </div>
   )
 }

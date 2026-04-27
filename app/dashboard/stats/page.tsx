@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import StatsClient from './StatsClient'
+import type { UserStatsRow } from '@/lib/domain/routines'
+import type { WorkoutSessionWithRoutine } from '@/lib/domain/workout-sessions'
 
 export default async function StatsPage() {
   const supabase = await createClient()
@@ -42,8 +44,8 @@ export default async function StatsPage() {
   return (
     <div className="max-w-[1600px] mx-auto">
       <StatsClient 
-        userStats={stats || {}} 
-        sessions={sessions || []} 
+        userStats={(stats || null) as UserStatsRow | null} 
+        sessions={(sessions || []) as WorkoutSessionWithRoutine[]} 
       />
     </div>
   )

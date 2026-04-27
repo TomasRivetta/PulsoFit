@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 
 interface ExerciseResult {
@@ -12,9 +13,17 @@ interface ExerciseResult {
   instructions: string[];
 }
 
+export interface ExerciseSearchDetails {
+  gifUrl: string
+  target: string
+  instructions: string[]
+  bodyPart: string
+  equipment: string
+}
+
 interface ExerciseSearchInputProps {
   value: string;
-  onChange: (name: string, details?: any) => void;
+  onChange: (name: string, details?: ExerciseSearchDetails) => void;
   className?: string;
   placeholder?: string;
 }
@@ -136,10 +145,12 @@ export function ExerciseSearchInput({
                       const gifToShow = item.gifUrl || (item.id.length === 4 ? `/api/exercises/image/${item.id}` : null);
                       return gifToShow ? (
                         <div className="w-12 h-12 bg-white rounded-lg flex-shrink-0 overflow-hidden">
-                          <img
+                          <Image
                             src={gifToShow}
                             alt={item.name}
-                            loading="lazy"
+                            width={48}
+                            height={48}
+                            unoptimized
                             className="w-full h-full object-cover mix-blend-multiply"
                           />
                         </div>

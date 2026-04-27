@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { getRoutineTheme, type RoutineRecord } from '@/lib/domain/routines'
 
 export default async function RoutinesPage() {
   const supabase = await createClient()
@@ -78,21 +79,23 @@ export default async function RoutinesPage() {
         {/* Routine Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {routines && routines.length > 0 ? routines.map((routine) => {
+            const typedRoutine = routine as RoutineRecord
+            const theme = getRoutineTheme(typedRoutine.color_theme)
             return (
-              <Link href={`/dashboard/routines/${routine.id}`} key={routine.id}>
-                <div className={`h-full group relative overflow-hidden rounded-[2rem] bg-surface-container p-8 border border-outline-variant/5 hover:border-${routine.color_theme || 'primary'}-dim/20 transition-all flex flex-col`}>
+              <Link href={`/dashboard/routines/${typedRoutine.id}`} key={typedRoutine.id}>
+                <div className={`h-full group relative overflow-hidden rounded-[2rem] bg-surface-container p-8 border border-outline-variant/5 transition-all flex flex-col ${theme.borderHover}`}>
                   <div className="mb-6 flex justify-between items-start">
-                    <div className={`w-12 h-12 rounded-2xl bg-${routine.color_theme || 'primary'}-container/20 flex items-center justify-center text-${routine.color_theme || 'primary'}`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${theme.icon}`}>
                       <span className="material-symbols-outlined text-3xl">bolt</span>
                     </div>
-                    <span className="text-[#adaaaa] text-xs font-headline font-bold tracking-widest uppercase">{routine.goal}</span>
+                    <span className="text-[#adaaaa] text-xs font-headline font-bold tracking-widest uppercase">{typedRoutine.goal}</span>
                   </div>
-                  <h3 className="text-2xl font-headline font-bold text-on-surface mb-2">{routine.title}</h3>
-                  <p className="text-on-surface-variant text-sm mb-6 flex-1 leading-relaxed">{routine.description}</p>
+                  <h3 className="text-2xl font-headline font-bold text-on-surface mb-2">{typedRoutine.title}</h3>
+                  <p className="text-on-surface-variant text-sm mb-6 flex-1 leading-relaxed">{typedRoutine.description}</p>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className={`text-${routine.color_theme || 'primary'} font-headline font-extrabold text-xl`}>{routine.frequency_days} <span className="text-xs text-on-surface-variant font-medium uppercase tracking-widest">Días</span></span>
+                    <span className={`font-headline font-extrabold text-xl ${theme.metric}`}>{typedRoutine.frequency_days} <span className="text-xs text-on-surface-variant font-medium uppercase tracking-widest">Días</span></span>
                     <div className="flex gap-2">
-                       <span className={`text-[10px] font-bold text-${routine.color_theme || 'primary'} px-2 py-0.5 bg-${routine.color_theme || 'primary'}/10 rounded uppercase`}>{routine.difficulty}</span>
+                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${theme.pill}`}>{typedRoutine.difficulty}</span>
                     </div>
                   </div>
                 </div>

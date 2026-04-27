@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import WorkoutSessionClient from './WorkoutSessionClient';
+import type { RoutineRecord } from '@/lib/domain/routines';
 
 export default async function WorkoutSessionPage({
   params,
@@ -29,7 +30,7 @@ export default async function WorkoutSessionPage({
 
   return (
     <div className="h-screen w-full bg-surface text-on-surface flex flex-col overflow-hidden relative">
-      <WorkoutSessionClient routine={routine} />
+      <WorkoutSessionClient routine={routine as RoutineRecord} />
     </div>
   );
 }

@@ -1,12 +1,14 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { logout } from '@/app/(auth)/actions';
+import type { User } from '@supabase/supabase-js';
 
 interface ProfileClientProps {
-  user: any;
+  user: User;
   displayName: string;
   avatarUrl?: string;
 }
@@ -68,9 +70,10 @@ export function ProfileClient({ user, displayName, avatarUrl }: ProfileClientPro
       setSelectedFile(null);
       setPreviewUrl(null);
       router.refresh();
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error desconocido';
       console.error('Error updating profile:', err);
-      alert(`Error al actualizar el perfil: ${err.message || 'Error desconocido'}`);
+      alert(`Error al actualizar el perfil: ${message}`);
     } finally {
       setIsSaving(false);
     }
@@ -81,7 +84,7 @@ export function ProfileClient({ user, displayName, avatarUrl }: ProfileClientPro
       <div className="flex flex-col sm:flex-row items-center gap-8 relative z-10">
         <div className="w-32 h-32 rounded-full bg-surface-container-highest border-4 border-primary/20 flex items-center justify-center overflow-hidden shadow-2xl relative group">
           {avatarUrl ? (
-            <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
+            <Image src={avatarUrl} alt={displayName} fill unoptimized className="object-cover" />
           ) : (
             <span className="material-symbols-outlined text-6xl text-primary/40">person</span>
           )}
@@ -125,7 +128,13 @@ export function ProfileClient({ user, displayName, avatarUrl }: ProfileClientPro
         <label className="relative cursor-pointer group">
           <div className="w-32 h-32 rounded-full bg-surface-container-highest border-4 border-primary/20 flex items-center justify-center overflow-hidden shadow-2xl relative">
             {(previewUrl || avatarUrl) ? (
-              <img src={previewUrl || avatarUrl} className="w-full h-full object-cover opacity-80 group-hover:opacity-40 transition-opacity" />
+              <Image
+                src={previewUrl || avatarUrl || ''}
+                alt={name}
+                fill
+                unoptimized
+                className="object-cover opacity-80 group-hover:opacity-40 transition-opacity"
+              />
             ) : (
               <span className="material-symbols-outlined text-6xl text-primary/40 group-hover:opacity-20">person</span>
             )}
@@ -183,4 +192,3 @@ export function ProfileClient({ user, displayName, avatarUrl }: ProfileClientPro
     </div>
   );
 }
-

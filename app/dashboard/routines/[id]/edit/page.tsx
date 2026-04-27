@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { EditClientForm } from './EditClientForm';
+import type { RoutineRecord } from '@/lib/domain/routines';
 
 export default async function EditRoutinePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -12,5 +13,5 @@ export default async function EditRoutinePage({ params }: { params: Promise<{ id
 
   if (!routine) redirect('/dashboard/routines');
 
-  return <EditClientForm routine={routine} />;
+  return <EditClientForm routine={routine as RoutineRecord} />;
 }

@@ -1,20 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { DeleteButton } from './DeleteButton';
-
-interface RoutineExercise {
-  id: string;
-  load: number;
-  name: string;
-  reps: number;
-  rest: number;
-  sets: number;
-  category: string;
-  gifUrl?: string;
-  instructions?: string[];
-  target?: string;
-}
+import { coerceRoutineExercises, getRoutineTheme, type RoutineRecord } from '@/lib/domain/routines';
 
 export default async function RoutineDetailedPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -26,11 +15,13 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
 
   if (!routine) redirect('/dashboard/routines');
 
-  const exercises = (routine.exercises as any as RoutineExercise[]) || [];
+  const typedRoutine = routine as RoutineRecord
+  const exercises = coerceRoutineExercises(typedRoutine.exercises)
+  const theme = getRoutineTheme(typedRoutine.color_theme)
   
   // Calculate total volume estimate: sum of (sets * reps * load)
   const totalVolume = exercises.reduce((acc, ex) => acc + (ex.sets * ex.reps * ex.load), 0);
-  const avgDuration = routine.duration_mins || 60;
+  const avgDuration = typedRoutine.duration_mins || 60;
 
   return (
     <>
@@ -47,29 +38,29 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
               <Link href="/dashboard/routines" className="text-on-surface-variant hover:text-primary transition-colors active:scale-95 duration-200 lg:hidden">
                 <span className="material-symbols-outlined">arrow_back</span>
               </Link>
-              <span className={`bg-${routine.color_theme || 'primary'}/10 text-${routine.color_theme || 'primary'} text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest`}>
-                {routine.goal}
+              <span className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest ${theme.badge}`}>
+                {typedRoutine.goal}
               </span>
-              <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">• {routine.frequency_days} Días / Semana</span>
+              <span className="text-on-surface-variant text-xs font-medium uppercase tracking-widest">• {typedRoutine.frequency_days} Días / Semana</span>
             </div>
-            <h1 className={`text-4xl lg:text-7xl font-black font-headline tracking-tighter leading-none mb-6 italic text-${routine.color_theme || 'primary'}`}>
-              {routine.title.toUpperCase()}
+            <h1 className={`text-4xl lg:text-7xl font-black font-headline tracking-tighter leading-none mb-6 italic ${theme.title}`}>
+              {typedRoutine.title.toUpperCase()}
             </h1>
             <p className="text-on-surface-variant max-w-2xl text-lg leading-relaxed font-body">
-              {routine.description}
+              {typedRoutine.description}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3 lg:flex-col lg:min-w-[200px]">
-            <Link href={`/dashboard/routines/${routine.id}/session`} className="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-gradient-to-br from-primary-container to-primary-dim text-on-primary-fixed font-black px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(202,253,0,0.2)] hover:shadow-[0_0_30px_rgba(202,253,0,0.3)] transition-all active:scale-95">
+            <Link href={`/dashboard/routines/${typedRoutine.id}/session`} className="flex-1 lg:flex-none flex items-center justify-center gap-2 bg-gradient-to-br from-primary-container to-primary-dim text-on-primary-fixed font-black px-8 py-4 rounded-xl shadow-[0_0_20px_rgba(202,253,0,0.2)] hover:shadow-[0_0_30px_rgba(202,253,0,0.3)] transition-all active:scale-95">
               <span className="material-symbols-outlined">play_arrow</span>
               INICIAR RUTINA
             </Link>
             <div className="flex gap-3">
-              <Link href={`/dashboard/routines/${routine.id}/edit`} className="flex-1 flex items-center justify-center p-4 bg-surface-container rounded-xl text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-all">
+              <Link href={`/dashboard/routines/${typedRoutine.id}/edit`} className="flex-1 flex items-center justify-center p-4 bg-surface-container rounded-xl text-on-surface-variant hover:text-white hover:bg-surface-container-high transition-all">
                 <span className="material-symbols-outlined">edit</span>
               </Link>
-              <DeleteButton routineId={routine.id} />
+              <DeleteButton routineId={typedRoutine.id} />
             </div>
           </div>
         </div>
@@ -85,7 +76,7 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
           </div>
           <div className="bg-surface-container-low p-6 rounded-2xl">
             <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Dificultad</p>
-            <p className="text-2xl font-black font-headline text-secondary tracking-tighter uppercase">{routine.difficulty}</p>
+            <p className="text-2xl font-black font-headline text-secondary tracking-tighter uppercase">{typedRoutine.difficulty}</p>
           </div>
           <div className="bg-surface-container-low p-6 rounded-2xl">
             <p className="text-on-surface-variant text-[10px] uppercase tracking-widest mb-1">Ejercicios</p>
@@ -99,7 +90,7 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
           <div className="flex flex-col md:flex-row md:items-baseline gap-4 mb-8">
             <h2 className="text-4xl font-black font-headline italic tracking-tighter">EJERCICIOS</h2>
             <div className="h-[2px] flex-grow bg-gradient-to-r from-outline-variant/30 to-transparent hidden md:block"></div>
-            <span className="text-primary text-sm font-bold uppercase tracking-[0.2em]">{routine.goal}</span>
+            <span className="text-primary text-sm font-bold uppercase tracking-[0.2em]">{typedRoutine.goal}</span>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -110,10 +101,11 @@ export default async function RoutineDetailedPage({ params }: { params: Promise<
                     const gifToShow = ex.gifUrl || (ex.id.length === 4 ? `/api/exercises/image/${ex.id}` : null);
                     return gifToShow ? (
                       <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white rounded-2xl flex-shrink-0 overflow-hidden relative">
-                        <img 
+                        <Image 
                           src={gifToShow} 
                           alt={`Demostración de ${ex.name}`} 
-                          loading="lazy" 
+                          fill
+                          unoptimized
                           className="w-full h-full object-cover mix-blend-multiply absolute inset-0"
                         />
                       </div>

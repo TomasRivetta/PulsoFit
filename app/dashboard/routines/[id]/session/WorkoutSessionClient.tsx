@@ -1,32 +1,63 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect, useRef, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { saveWorkoutSessionAction } from './actions';
+import { coerceRoutineExercises, type RoutineRecord } from '@/lib/domain/routines';
+import {
+  createInitialSessionData,
+  type WorkoutSessionData,
+} from '@/lib/domain/workout-sessions';
 
-interface RoutineExercise {
-  id: string;
-  name: string;
-  category: string;
-  sets: number;
-  reps: number;
-  load: number;
-  rest: number;
-  gifUrl?: string;
-  instructions?: string[];
-  target?: string;
-}
+export default function WorkoutSessionClient({ routine }: { routine: RoutineRecord }) {
+  const router = useRouter();
+  const exercises = coerceRoutineExercises(routine.exercises);
 
-interface SetRecord {
-  load: string;
-  reps: string;
-  completed: boolean;
-}
+  // --- Session State ---
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [sessionData, setSessionData] = useState<WorkoutSessionData>(() => createInitialSessionData(exercises));
+  const [selectedSetIndex, setSelectedSetIndex] = useState<number | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const [startTime] = useState(() => new Date().toISOString());
+  const [restTimeRemaining, setRestTimeRemaining] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-export default function WorkoutSessionClient({ routine }: { routine: any }) {
-  const exercises: RoutineExercise[] = routine.exercises || [];
-  
-  if (exercises.length === 0) {
+  const currentEx = exercises[currentExerciseIndex] ?? null;
+  const currentExSets = currentEx ? sessionData[currentEx.id] || [] : [];
+  const isTimerActive = restTimeRemaining > 0;
+  const firstIncompleteSetIndex = currentExSets.findIndex((set) => !set.completed);
+  const fallbackSetIndex = firstIncompleteSetIndex === -1 ? Math.max(currentExSets.length - 1, 0) : firstIncompleteSetIndex;
+  const activeSetIndex =
+    selectedSetIndex !== null &&
+    selectedSetIndex >= 0 &&
+    selectedSetIndex < currentExSets.length &&
+    !currentExSets[selectedSetIndex]?.completed
+      ? selectedSetIndex
+      : fallbackSetIndex;
+
+  useEffect(() => {
+    if (restTimeRemaining <= 0) {
+      return () => {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+        }
+      };
+    }
+
+    timerRef.current = setTimeout(() => {
+      setRestTimeRemaining((prev) => Math.max(prev - 1, 0));
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [restTimeRemaining]);
+
+  if (!currentEx) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center p-8 text-center bg-surface text-on-surface">
         <span className="material-symbols-outlined text-6xl text-on-surface-variant mb-4">gpp_bad</span>
@@ -38,107 +69,66 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
       </div>
     );
   }
-
-  // --- Session State ---
-  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const currentEx = exercises[currentExerciseIndex];
-
-  // We need state to track the sets for each exercise
-  // Initialize with the target specs.
-  const [sessionData, setSessionData] = useState<Record<string, SetRecord[]>>(() => {
-    const initialState: Record<string, SetRecord[]> = {};
-    exercises.forEach(ex => {
-      initialState[ex.id] = Array(ex.sets).fill(null).map(() => ({
-        load: ex.load > 0 ? ex.load.toString() : '',
-        reps: ex.reps > 0 ? ex.reps.toString() : '',
-        completed: false
-      }));
-    });
-    return initialState;
-  });
-
-  // Track which set the user is currently editing
-  const [activeSetIndex, setActiveSetIndex] = useState(0);
-
-  // Real DB state
-  const [isPending, startTransition] = useTransition();
-  const [startTime] = useState(() => new Date().toISOString());
-
-  // Timer State
-  const [restTimeRemaining, setRestTimeRemaining] = useState(0);
-  const [isTimerActive, setIsTimerActive] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Derive progress
-  const currentExSets = sessionData[currentEx.id] || [];
-
-  // Initialize active set on exercise switch
-  useEffect(() => {
-    const setsForEx = sessionData[currentEx.id] || [];
-    const firstIncomplete = setsForEx.findIndex(s => !s.completed);
-    setActiveSetIndex(firstIncomplete === -1 ? setsForEx.length - 1 : firstIncomplete);
-  }, [currentExerciseIndex]);
-
-  // Timer Tick
-  useEffect(() => {
-    if (isTimerActive && restTimeRemaining > 0) {
-      timerRef.current = setTimeout(() => {
-        setRestTimeRemaining(prev => prev - 1);
-      }, 1000);
-    } else if (restTimeRemaining === 0) {
-      setIsTimerActive(false);
-    }
-    return () => clearInterval(timerRef.current!);
-  }, [isTimerActive, restTimeRemaining]);
-
   const updateSetInput = (setIndex: number, field: 'load' | 'reps', value: string) => {
-    setSessionData(prev => {
-      const exData = [...prev[currentEx.id]];
-      exData[setIndex] = { ...exData[setIndex], [field]: value };
+    setSessionData((prev) => {
+      const exData = [...(prev[currentEx.id] || [])];
+      const nextSet = exData[setIndex];
+      if (!nextSet) {
+        return prev;
+      }
+
+      exData[setIndex] = { ...nextSet, [field]: value };
       return { ...prev, [currentEx.id]: exData };
     });
   };
 
   const completeSet = (setIndex: number) => {
-    setSessionData(prev => {
-      const exData = [...prev[currentEx.id]];
-      exData[setIndex] = { ...exData[setIndex], completed: true };
+    setSessionData((prev) => {
+      const exData = [...(prev[currentEx.id] || [])];
+      const nextSet = exData[setIndex];
+      if (!nextSet) {
+        return prev;
+      }
+
+      exData[setIndex] = { ...nextSet, completed: true };
       return { ...prev, [currentEx.id]: exData };
     });
 
     // Automatically move to next set
     if (setIndex < currentEx.sets - 1) {
-      setActiveSetIndex(setIndex + 1);
+      setSelectedSetIndex(setIndex + 1);
     }
 
     // Start rest timer
     if (currentEx.rest > 0) {
       setRestTimeRemaining(currentEx.rest);
-      setIsTimerActive(true);
     }
   };
 
   const undoCompleteSet = (setIndex: number) => {
-    setSessionData(prev => {
-      const exData = [...prev[currentEx.id]];
-      exData[setIndex] = { ...exData[setIndex], completed: false };
+    setSessionData((prev) => {
+      const exData = [...(prev[currentEx.id] || [])];
+      const nextSet = exData[setIndex];
+      if (!nextSet) {
+        return prev;
+      }
+
+      exData[setIndex] = { ...nextSet, completed: false };
       return { ...prev, [currentEx.id]: exData };
     });
-    setActiveSetIndex(setIndex);
+    setSelectedSetIndex(setIndex);
   };
 
   const adjustTimer = (seconds: number) => {
-    setRestTimeRemaining(prev => Math.max(0, prev + seconds));
-    if (restTimeRemaining + seconds > 0) {
-      setIsTimerActive(true);
-    }
+    setRestTimeRemaining((prev) => Math.max(0, prev + seconds));
   };
 
   const finishWorkout = () => {
     startTransition(async () => {
       try {
         await saveWorkoutSessionAction(routine.id, sessionData, startTime);
-        window.location.href = '/dashboard';
+        router.push('/dashboard');
+        router.refresh();
       } catch (e) {
         console.error(e);
       }
@@ -147,8 +137,8 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
 
   const nextExercise = () => {
     if (currentExerciseIndex < exercises.length - 1) {
-      setCurrentExerciseIndex(prev => prev + 1);
-      setIsTimerActive(false);
+      setCurrentExerciseIndex((prev) => prev + 1);
+      setSelectedSetIndex(null);
       setRestTimeRemaining(0);
     } else {
       finishWorkout();
@@ -204,11 +194,19 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
 
             {/* Hero Exercise Video Card */}
             <div className="relative group rounded-[2rem] overflow-hidden bg-surface-container aspect-video shadow-2xl ring-1 ring-outline-variant/10">
-              <img 
-                alt="Exercise Demonstration" 
-                className={`w-full h-full object-cover mix-blend-screen transition-opacity duration-1000 ${currentEx.gifUrl ? 'opacity-100' : 'opacity-40'}`} 
-                src={currentEx.gifUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuC3Bupu1B6jnfLeY7zbZu8rIdZ6kDlKZlrRic8w3CBZ1B_KvZjpFM2xm2wRwpghXNkLmbKo28da2xepsc_z8AViCDiAplb_6jNVnxCjeyeBAcrVnsi-ZRGmkzGj5AIl6AoqLOCgirXi0VSwtu9R_Ei20YVPHWRco1FLPu00q-9tmyLtf4sVKYpLfYB4Vvq8LpIHq5nDng1ZAYpgfKw78fUH4wOQYEF_atAfpsvEt1mc8XpfT_o_8P-QKt7esXK112abYxrcvU9EjQ"}
-              />
+              {currentEx.gifUrl ? (
+                <Image
+                  src={currentEx.gifUrl}
+                  alt={`Demostración de ${currentEx.name}`}
+                  fill
+                  unoptimized
+                  className="w-full h-full object-cover mix-blend-screen transition-opacity duration-1000 opacity-100"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-surface-container-high text-on-surface-variant">
+                  <span className="material-symbols-outlined text-7xl opacity-40">fitness_center</span>
+                </div>
+              )}
               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
             </div>
 
@@ -325,7 +323,7 @@ export default function WorkoutSessionClient({ routine }: { routine: any }) {
 
                   if (isInactive) {
                     return (
-                      <div key={idx} onClick={() => setActiveSetIndex(idx)} className="group flex items-center gap-2 md:gap-4 opacity-40 p-4 rounded-2xl grayscale transition-all hover:grayscale-0 hover:opacity-100 cursor-pointer">
+                      <div key={idx} onClick={() => setSelectedSetIndex(idx)} className="group flex items-center gap-2 md:gap-4 opacity-40 p-4 rounded-2xl grayscale transition-all hover:grayscale-0 hover:opacity-100 cursor-pointer">
                         <div className="w-10 h-10 shrink-0 rounded-full bg-surface-variant flex items-center justify-center text-white font-black text-sm">{idx + 1}</div>
                         <div className="grid grid-cols-2 flex-1 gap-4">
                           <div className="bg-surface-container-lowest rounded-xl py-3 text-center text-on-surface-variant font-bold text-sm">--</div>

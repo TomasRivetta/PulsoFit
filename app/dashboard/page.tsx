@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { normalizeScheduledDays, WEEKDAY_BY_DATE_INDEX, type RoutineRecord } from '@/lib/domain/routines'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -19,23 +20,22 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .single()
 
-  const daysMap = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
-  const todayString = daysMap[new Date().getDay()];
+  const todayString = WEEKDAY_BY_DATE_INDEX[new Date().getDay()]
 
-  // Fetch "routine of the day" by finding the first routine that has today's day included in scheduled_days
-  const { data: featuredRoutineData } = await supabase
+  const { data: routines } = await supabase
     .from('routines')
     .select('*')
     .eq('user_id', user.id)
-    .contains('scheduled_days', [todayString])
-    .limit(1)
-    .maybeSingle();
+    .order('created_at', { ascending: false })
 
-  const featuredRoutine: any = featuredRoutineData;
+  const featuredRoutine =
+    (routines as RoutineRecord[] | null)?.find((routine) =>
+      normalizeScheduledDays(routine.scheduled_days ?? []).includes(todayString)
+    ) ?? null
 
   const currentStats = {
     daily_streak: stats?.daily_streak ?? 0,
-  };
+  }
 
   return (
     <>
@@ -127,5 +127,5 @@ export default async function DashboardPage() {
         {/* Placeholder or Future Sections can be added below */}
       </div>
     </>
-  );
+  )
 }

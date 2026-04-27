@@ -3,15 +3,21 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import type { ActionState } from '@/lib/types/actions'
+import {
+  validateLoginForm,
+  validatePasswordResetForm,
+  validatePasswordUpdateForm,
+  validateSignupForm,
+} from '@/lib/validation/auth'
 
-export async function login(prevState: any, formData: FormData) {
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
-
-  if (!email || !password) {
-    return { error: 'Email y contraseña son requeridos' }
+export async function login(_prevState: ActionState | null, formData: FormData) {
+  const validation = validateLoginForm(formData)
+  if (!validation.data) {
+    return validation.state
   }
 
+  const { email, password } = validation.data
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -27,21 +33,13 @@ export async function login(prevState: any, formData: FormData) {
   redirect('/dashboard')
 }
 
-export async function signup(prevState: any, formData: FormData) {
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
-  const nombre = formData.get('nombre') as string
-  const apellido = formData.get('apellido') as string
-  const confirmPassword = formData.get('confirm-password') as string
-
-  if (!email || !password || !nombre || !apellido || !confirmPassword) {
-    return { error: 'Todos los campos son requeridos' }
+export async function signup(_prevState: ActionState | null, formData: FormData) {
+  const validation = validateSignupForm(formData)
+  if (!validation.data) {
+    return validation.state
   }
 
-  if (password !== confirmPassword) {
-    return { error: 'Las contraseñas no coinciden' }
-  }
-
+  const { apellido, email, nombre, password } = validation.data
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signUp({
@@ -78,13 +76,13 @@ export async function logout() {
   redirect('/login')
 }
 
-export async function requestPasswordReset(prevState: any, formData: FormData) {
-  const email = formData.get('email') as string
-
-  if (!email) {
-    return { error: 'El email es requerido' }
+export async function requestPasswordReset(_prevState: ActionState | null, formData: FormData) {
+  const validation = validatePasswordResetForm(formData)
+  if (!validation.data) {
+    return validation.state
   }
 
+  const { email } = validation.data
   const supabase = await createClient()
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -98,22 +96,17 @@ export async function requestPasswordReset(prevState: any, formData: FormData) {
   return { success: 'Se ha enviado un enlace de recuperación a tu email' }
 }
 
-export async function updatePassword(prevState: any, formData: FormData) {
-  const password = formData.get('password') as string
-  const confirmPassword = formData.get('confirm-password') as string
-
-  if (!password || !confirmPassword) {
-    return { error: 'Todos los campos son requeridos' }
+export async function updatePassword(_prevState: ActionState | null, formData: FormData) {
+  const validation = validatePasswordUpdateForm(formData)
+  if (!validation.data) {
+    return validation.state
   }
 
-  if (password !== confirmPassword) {
-    return { error: 'Las contraseñas no coinciden' }
-  }
-
+  const { password } = validation.data
   const supabase = await createClient()
 
   const { error } = await supabase.auth.updateUser({
-    password: password,
+    password,
   })
 
   if (error) {
